@@ -2,6 +2,7 @@
 <section name="Workbench">
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\Faks\4. God veliki projekat\cloud-drive-microservices\users-service"/>
 			<item value="C:\Users\Win10\Desktop\cloud-drive-microservices"/>
 		</list>
 		<list key="projectNameTemplate">

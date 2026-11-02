@@ -22,16 +22,16 @@ public class UserService {
             throw new RuntimeException("Korisnik sa ovim email-om već postoji!");
         }
 
-        String hashedPassword = passwordEncoder.encode(registrationDto.getPassword());
+        String hashedLozinka = passwordEncoder.encode(registrationDto.getLozinka());
 
-        long defaultQuota = 5L * 1024 * 1024 * 1024; 
+        Long defaultKvota = 5L * 1024 * 1024 * 1024;
 
         User newUser = new User(
             registrationDto.getEmail(),
-            hashedPassword,
-            registrationDto.getFirstName(),
-            registrationDto.getLastName(),
-            defaultQuota
+            hashedLozinka,
+            registrationDto.getIme(),
+            registrationDto.getPrezime(),
+            defaultKvota
         );
 
         return userRepository.save(newUser);

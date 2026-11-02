@@ -9,20 +9,22 @@ public class User {
     @Id
     private String id;
     private String email;
-    private String password;
-    private String firstName;
-    private String lastName;
-    private long storageQuota;
+    private String lozinka;
+    private String ime;
+    private String prezime;
+    private Long kvotaSkladista;
+    private Long zauzetoSkladiste;
 
     public User() {
     }
 
-    public User(String email, String password, String firstName, String lastName, long storageQuota) {
+    public User(String email, String lozinka, String ime, String prezime, Long kvotaSkladista) {
         this.email = email;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.storageQuota = storageQuota;
+        this.lozinka = lozinka;
+        this.ime = ime;
+        this.prezime = prezime;
+        this.kvotaSkladista = kvotaSkladista;
+        this.zauzetoSkladiste = 0L;
     }
 
     public String getId() {
@@ -41,35 +43,43 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getLozinka() {
+        return lozinka;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setLozinka(String lozinka) {
+        this.lozinka = lozinka;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getIme() {
+        return ime;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setIme(String ime) {
+        this.ime = ime;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getPrezime() {
+        return prezime;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setPrezime(String prezime) {
+        this.prezime = prezime;
     }
 
-    public long getStorageQuota() {
-        return storageQuota;
+    public Long getKvotaSkladista() {
+        return kvotaSkladista;
     }
 
-    public void setStorageQuota(long storageQuota) {
-        this.storageQuota = storageQuota;
+    public void setKvotaSkladista(Long kvotaSkladista) {
+        this.kvotaSkladista = kvotaSkladista;
+    }
+
+    public Long getZauzetoSkladiste() {
+        return zauzetoSkladiste;
+    }
+
+    public void setZauzetoSkladiste(Long zauzetoSkladiste) {
+        this.zauzetoSkladiste = zauzetoSkladiste;
     }
 }

@@ -1,2 +1,3 @@
-2026/10/29-11:37:43.041 51c Creating DB C:\Users\Win10\Desktop\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
-2026/10/29-11:37:43.058 51c Reusing MANIFEST C:\Users\Win10\Desktop\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/11/02-15:33:11.345 a74 Reusing MANIFEST D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
+2026/11/02-15:33:11.347 a74 Recovering log #3
+2026/11/02-15:33:11.349 a74 Reusing old log D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
