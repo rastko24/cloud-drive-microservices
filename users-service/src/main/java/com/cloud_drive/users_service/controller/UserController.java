@@ -1,6 +1,6 @@
 package com.cloud_drive.users_service.controller;
 
-import com.cloud_drive.users_service.dto.UserRegistrationDto;
+import com.cloud_drive.users_service.dto.*;
 import com.cloud_drive.users_service.model.User;
 import com.cloud_drive.users_service.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,17 @@ public class UserController {
     public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
         try {
             User registeredUser = userService.registerUser(registrationDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(registeredUser);
+            
+            UserResponseDto responseDto = new UserResponseDto(
+                registeredUser.getId(),
+                registeredUser.getEmail(),
+                registeredUser.getIme(),
+                registeredUser.getPrezime(),
+                registeredUser.getKvotaSkladista(),
+                registeredUser.getZauzetoSkladiste()
+            );
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
