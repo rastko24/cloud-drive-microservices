@@ -1,0 +1,38 @@
+.registracija-kontejner {
+  background-color: #f2eefc;
+  min-height: 100vh;
+}
+
+.kartica-okvir {
+  box-shadow: 0 20px 40px rgba(91, 33, 182, 0.1) !important;
+}
+
+.desni-panel {
+  background: linear-gradient(135deg, #6b46c1 0%, #4c1d95 100%);
+}
+
+.dekorativni-krug {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+.krug-1 {
+  width: 250px;
+  height: 250px;
+  top: -80px;
+  right: -80px;
+}
+
+.krug-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -60px;
+  left: -60px;
+}
+
+.form-control:focus {
+  border-color: #6b46c1;
+  box-shadow: 0 0 0 0.25rem rgba(107, 70, 193, 0.15);
+}

@@ -1,9 +1,23 @@
 package com.cloud_drive.users_service.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class UserRegistrationDto {
-    private String email;
+	
+	@NotBlank(message = "Email je obavezan!")
+	@Email(message = "Email adresa nije validna!")
+	private String email;
+	
+	@NotBlank(message = "Lozinka je obavezna!")
+	@Size(min = 6, message = "Lozinka mora imati najmanje 6 karaktera!")
     private String lozinka;
+    
+    @NotBlank(message = "Ime je obavezno!")
     private String ime;
+    
+    @NotBlank(message = "Prezime je obavezno!")
     private String prezime;
 
     public String getEmail() {

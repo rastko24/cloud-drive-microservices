@@ -3,6 +3,9 @@ package com.cloud_drive.users_service.controller;
 import com.cloud_drive.users_service.dto.*;
 import com.cloud_drive.users_service.model.User;
 import com.cloud_drive.users_service.service.UserService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +22,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDto registrationDto) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody UserRegistrationDto registrationDto) {
         try {
             User registeredUser = userService.registerUser(registrationDto);
             

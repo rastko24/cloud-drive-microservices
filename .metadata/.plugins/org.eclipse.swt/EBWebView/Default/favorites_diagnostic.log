@@ -57,3 +57,33 @@
 2026-11-03 13:33:13.972: [INFO] BookmarksLoadDropped droppedNodes=0
 2026-11-03 13:33:13.972: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
 2026-11-03 13:35:29.682: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:07:09.026: [INFO] CurrentProfilePath: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:07:09.026: [INFO] Profiles total count: 1
+2026-11-03 15:07:09.026: [INFO] Profile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:07:09.026: [INFO] LastUsedProfileDir: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:07:09.026: [INFO] MostRecentlyActiveProfile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:07:09.026: [INFO] OnDoneLoading sync enabled: 0
+2026-11-03 15:07:09.026: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-11-03 15:07:09.026: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-11-03 15:07:09.026: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:22:17.221: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:43:11.950: [INFO] CurrentProfilePath: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:43:11.950: [INFO] Profiles total count: 1
+2026-11-03 15:43:11.950: [INFO] Profile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:43:11.950: [INFO] LastUsedProfileDir: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:43:11.951: [INFO] MostRecentlyActiveProfile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:43:11.951: [INFO] OnDoneLoading sync enabled: 0
+2026-11-03 15:43:11.951: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-11-03 15:43:11.951: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-11-03 15:43:11.951: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:43:24.327: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:47:12.107: [INFO] CurrentProfilePath: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:47:12.107: [INFO] Profiles total count: 1
+2026-11-03 15:47:12.107: [INFO] Profile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:47:12.107: [INFO] LastUsedProfileDir: D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-03 15:47:12.107: [INFO] MostRecentlyActiveProfile: name=Profile 1 path=D:\Faks\4. God veliki projekat\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-03 15:47:12.107: [INFO] OnDoneLoading sync enabled: 0
+2026-11-03 15:47:12.107: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-11-03 15:47:12.107: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-11-03 15:47:12.107: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-03 15:47:21.309: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
