@@ -4,25 +4,25 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
-@Document(collection = "folders")
+@Document(collection = "folderi")
 public class Folder {
 
     @Id
     private String id;
     private String naziv;
     private String vlasnikId;
-    private String roditeljId;
+    private String roditeljId; 
     private LocalDateTime datumKreiranja;
 
     public Folder() {
+        this.datumKreiranja = LocalDateTime.now();
     }
 
-    public Folder(String id, String naziv, String vlasnikId, String roditeljId, LocalDateTime datumKreiranja) {
-        this.id = id;
+    public Folder(String naziv, String vlasnikId, String roditeljId) {
         this.naziv = naziv;
         this.vlasnikId = vlasnikId;
         this.roditeljId = roditeljId;
-        this.datumKreiranja = datumKreiranja;
+        this.datumKreiranja = LocalDateTime.now();
     }
 
     public String getId() {

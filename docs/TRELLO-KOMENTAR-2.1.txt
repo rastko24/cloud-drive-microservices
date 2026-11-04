@@ -1,0 +1,13 @@
+[E-2.1] Završeno — dizajn sistema
+
+Repo: cloud-drive-microservices
+Glavni dokument: README.md (entiteti, portovi, API plan, komunikacija 2.5)
+Dijagram: arhitektura-sistema.png + docs/DIJAGRAM-2.1.md (Mermaid)
+
+Dogovor tima:
+- Foldere i datoteke radi SAMO files-service (8082)
+- Auth, kvota, admin zahtevi — users-service (8081)
+- Notifikacije za 1.7 — notifications-service (8083), ručno u Mongo
+- Front zove SAMO gateway (8080)
+
+Možete krenuti sa implementacijom prema README poglavljima 5 i 7.

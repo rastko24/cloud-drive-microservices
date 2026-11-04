@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule, RouterLink], 
   templateUrl: './register.html',
   styleUrls: ['./register.css']
 })
@@ -51,10 +52,12 @@ export class RegisterComponent {
     };
 
     this.http.post(this.apiUrl, podaciZaRegistraciju).subscribe({
-      next: (odgovor) => {
-        console.log('Uspešna registracija:', odgovor);
-        alert('Uspešno ste se registrovali!');
-      },
+		next: (odgovor: any) => {
+		  console.log('Uspešna registracija:', odgovor);
+		  localStorage.setItem('userId', odgovor.id);
+		  localStorage.setItem('userEmail', odgovor.email);
+		  alert('Uspešno ste se registrovali!');
+		},
       error: (greska) => {
         console.error('Greška pri registraciji:', greska);
         const poruka = typeof greska.error === 'string' ? greska.error : 'Došlo je do problema.';
