@@ -87,3 +87,12 @@
 2026-11-03 15:47:12.107: [INFO] BookmarksLoadDropped droppedNodes=0
 2026-11-03 15:47:12.107: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
 2026-11-03 15:47:21.309: [INFO] BookmarksSnapshot Shutdown total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1
+2026-11-10 15:47:47.914: [INFO] CurrentProfilePath: C:\Users\Natasa\Documents\GitHub\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-10 15:47:47.914: [INFO] Profiles total count: 1
+2026-11-10 15:47:47.914: [INFO] Profile: name=Profile 1 path=C:\Users\Natasa\Documents\GitHub\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-10 15:47:47.914: [INFO] LastUsedProfileDir: C:\Users\Natasa\Documents\GitHub\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default
+2026-11-10 15:47:47.914: [INFO] MostRecentlyActiveProfile: name=Profile 1 path=C:\Users\Natasa\Documents\GitHub\cloud-drive-microservices\.metadata\.plugins\org.eclipse.swt\EBWebView\Default lastActive=2026-11-02T14:21:07.897Z
+2026-11-10 15:47:47.914: [INFO] OnDoneLoading sync enabled: 0
+2026-11-10 15:47:47.914: [INFO] BookmarkModelLoaded, ids_reassigned: 0
+2026-11-10 15:47:47.914: [INFO] BookmarksLoadDropped droppedNodes=0
+2026-11-10 15:47:47.914: [INFO] BookmarksSnapshot Startup total=0 bar=0 other=0 mobile=0 showBar=0 showBarNTP=1

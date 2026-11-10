@@ -1,4 +1,7 @@
+
 package com.cloud_drive.users_service.model;
+
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,10 +13,20 @@ public class User {
     private String id;
     private String email;
     private String lozinka;
+    private LocalDateTime datumPromeneLozinke;
+    private LocalDateTime blokiranDo;
     private String ime;
     private String prezime;
     private Long kvotaSkladista;
     private Long zauzetoSkladiste;
+
+    private String otpKod;
+    private LocalDateTime otpIstice;
+
+    private String tokenResetLozinke;
+    private LocalDateTime tokenResetIstice;
+
+    private int brojOtpPokusaja;
 
     public User() {
     }
@@ -82,4 +95,60 @@ public class User {
     public void setZauzetoSkladiste(Long zauzetoSkladiste) {
         this.zauzetoSkladiste = zauzetoSkladiste;
     }
+
+    public String getOtpKod() {
+        return otpKod;
+    }
+
+    public void setOtpKod(String otpKod) {
+        this.otpKod = otpKod;
+    }
+
+    public LocalDateTime getOtpIstice() {
+        return otpIstice;
+    }
+
+    public void setOtpIstice(LocalDateTime otpIstice) {
+        this.otpIstice = otpIstice;
+    }
+    public int getBrojOtpPokusaja() {
+        return brojOtpPokusaja;
+    }
+
+    public void setBrojOtpPokusaja(int brojOtpPokusaja) {
+        this.brojOtpPokusaja = brojOtpPokusaja;
+    }
+
+public LocalDateTime getDatumPromeneLozinke() {
+    return datumPromeneLozinke;
+}
+
+public void setDatumPromeneLozinke(LocalDateTime datumPromeneLozinke) {
+    this.datumPromeneLozinke = datumPromeneLozinke;
+}
+
+public String getTokenResetLozinke() {
+    return tokenResetLozinke;
+}
+
+public void setTokenResetLozinke(String tokenResetLozinke) {
+    this.tokenResetLozinke = tokenResetLozinke;
+}
+
+public LocalDateTime getTokenResetIstice() {
+    return tokenResetIstice;
+}
+
+public void setTokenResetIstice(LocalDateTime tokenResetIstice) {
+    this.tokenResetIstice = tokenResetIstice;
+}
+
+public LocalDateTime getBlokiranDo() {
+    return blokiranDo;
+}
+
+public void setBlokiranDo(LocalDateTime blokiranDo) {
+    this.blokiranDo = blokiranDo;
+}
+
 }
