@@ -8,9 +8,11 @@ import java.util.List;
 
 @Repository
 public interface FolderRepository extends MongoRepository<Folder, String> {
-    // Pronađi foldere u korenu (gde je roditeljId null) za određenog vlasnika
     List<Folder> findByVlasnikIdAndRoditeljIdIsNull(String vlasnikId);
-
-    // Pronađi podfoldere unutar određenog roditeljskog foldera
     List<Folder> findByVlasnikIdAndRoditeljId(String vlasnikId, String roditeljId);
+    
+    boolean existsByVlasnikIdAndRoditeljIdIsNullAndNaziv(String vlasnikId, String naziv);
+    boolean existsByVlasnikIdAndRoditeljIdAndNaziv(String vlasnikId, String roditeljId, String naziv);
+    boolean existsByVlasnikIdAndRoditeljIdIsNullAndNazivAndIdNot(String vlasnikId, String naziv, String id);
+    boolean existsByVlasnikIdAndRoditeljIdAndNazivAndIdNot(String vlasnikId, String roditeljId, String naziv, String id);
 }

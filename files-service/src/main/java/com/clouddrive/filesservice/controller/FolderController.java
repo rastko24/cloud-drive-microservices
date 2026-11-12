@@ -1,14 +1,13 @@
 package com.clouddrive.filesservice.controller;
 
 import com.clouddrive.filesservice.dto.FolderCreateDto;
+import com.clouddrive.filesservice.dto.PromenaNazivaDto;
 import com.clouddrive.filesservice.model.Folder;
 import com.clouddrive.filesservice.service.FolderService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/folderi")
@@ -36,8 +35,18 @@ public class FolderController {
             @RequestParam String vlasnikId,
             @RequestParam(required = false) String roditeljId) {
         try {
-            List<Folder> lista = folderService.dobaviSadrzaj(vlasnikId, roditeljId);
-            return ResponseEntity.ok(lista);
+            return ResponseEntity.ok(folderService.dobaviKompletanSadrzaj(vlasnikId, roditeljId));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}/naziv")
+    public ResponseEntity<?> promeniNaziv(
+            @PathVariable String id,
+            @Valid @RequestBody PromenaNazivaDto dto) {
+        try {
+            return ResponseEntity.ok(folderService.preimenuj(id, dto));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
