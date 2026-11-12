@@ -1,6 +1,5 @@
 # Cloud Drive — dizajn sistema
-
-Predmet: MRS, ocena 6  
+ 
 Tim: Rastko, Nataša, Filip  
 Tehnologije: Angular, Spring Boot, MongoDB, Docker Compose
 
