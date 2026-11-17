@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -38,6 +39,7 @@ export class FoldersComponent implements OnInit {
   private apiFolderi = 'http://localhost:8082/api/folderi';
   private apiFajlovi = 'http://localhost:8082/api/fajlovi';
 
+  ucitava = false;
   vlasnikId = '';
   trenutniRoditeljId: string | null = null;
   breadcrumb: BreadcrumbItem[] = [{ id: null, naziv: 'Moj disk' }];
