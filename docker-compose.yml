@@ -1,14 +1,69 @@
-version: '3.8'
-
 services:
-  mongodb:
-    image: mongo:latest
-    container_name: cloud_drive_mongo
-    restart: always
+  mongo:
+    image: mongo:7
+    container_name: cloud-drive-mongo
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app-net
+
+  users-service:
+    build:
+      context: ./users-service
+      dockerfile: Dockerfile
+    container_name: users-service
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/users_db
+      SERVER_PORT: 8081
+      APP_RESET_URL: ${APP_RESET_URL:-http://localhost:4200/reset-password}
+      APP_BLOKADA_MINUTA: ${APP_BLOKADA_MINUTA:-15}
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-localhost}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-1025}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME:-noreply@clouddrive.local}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD:-test}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: ${SPRING_MAIL_AUTH:-false}
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: ${SPRING_MAIL_STARTTLS:-false}
+    depends_on:
+      - mongo
+    networks:
+      - app-net
+
+  files-service:
+    build:
+      context: ./files-service
+      dockerfile: Dockerfile
+    container_name: files-service
+    ports:
+      - "8082:8082"
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/files_db
+      USERS_SERVICE_URL: http://users-service:8081
+    depends_on:
+      - mongo
+      - users-service
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cloud-drive-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - users-service
+      - files-service
+    networks:
+      - app-net
 
 volumes:
   mongo_data:
+
+networks:
+  app-net:
+    driver: bridge

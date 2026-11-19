@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\main",
+    "\\src\\main\\java",
+    "\\src\\main\\java\\com",
+    "\\src\\main\\java\\com\\clouddrive",
+    "\\src\\main\\java\\com\\clouddrive\\filesservice",
+    "\\src\\main\\java\\com\\clouddrive\\filesservice\\repository",
+    "\\src\\main\\java\\com\\clouddrive\\filesservice\\service",
+    "\\src\\main\\resources"
+  ],
+  "SelectedNode": "\\src\\main\\resources\\application.properties",
+  "PreviewInSolutionExplorer": false
+}

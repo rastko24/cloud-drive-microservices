@@ -1,0 +1,132 @@
+
+<div class="prijava-kontejner container-fluid min-vh-100 d-flex align-items-center justify-content-center p-4">
+  <div class="kartica-okvir border-0 rounded-4 overflow-hidden shadow-lg w-100" style="max-width: 1100px;">
+    <div class="row g-0">
+
+      <div class="col-lg-8 p-5 bg-white">
+        <div class="mb-4">
+          <h2 class="fw-bold text-dark">
+            {{ prikaziOtp ? 'Potvrdite prijavu' : 'Prijavite se' }}
+          </h2>
+
+          <p class="text-muted small">
+            {{ prikaziOtp
+              ? 'Unesite kod koji smo poslali na vašu e-mail adresu.'
+              : 'Unesite svoje podatke da pristupite nalogu.' }}
+          </p>
+        </div>
+
+        @if (greska) {
+          <div class="alert alert-danger" role="alert">
+            {{ greska }}
+          </div>
+        }
+
+        @if (poruka) {
+          <div class="alert alert-success" role="status">
+            {{ poruka }}
+          </div>
+        }
+
+        @if (!prikaziOtp) {
+          <form (ngSubmit)="prijaviSe()">
+
+            <div class="mb-3">
+              <label for="email" class="form-label text-secondary small fw-semibold">
+                E-mail adresa
+              </label>
+              <input
+                id="email"
+                type="email"
+                class="form-control form-control-lg fs-6"
+                [(ngModel)]="email"
+                name="email"
+                placeholder="ime@example.com"
+                autocomplete="username"
+                required>
+            </div>
+
+            <div class="mb-3">
+              <label for="lozinka" class="form-label text-secondary small fw-semibold">
+                Lozinka
+              </label>
+              <input
+                id="lozinka"
+                type="password"
+                class="form-control form-control-lg fs-6"
+                [(ngModel)]="lozinka"
+                name="lozinka"
+                placeholder="Unesite lozinku"
+                autocomplete="current-password"
+                required>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm"
+              [disabled]="ucitava">
+              {{ ucitava ? 'Prijavljivanje...' : 'Prijavi se' }}
+            </button>
+
+          </form>
+        } @else {
+          <form (ngSubmit)="proveriOtp()">
+
+            <div class="mb-3">
+              <label for="otpKod" class="form-label text-secondary small fw-semibold">
+                Kod za potvrdu
+              </label>
+              <input
+                id="otpKod"
+                type="text"
+                class="form-control form-control-lg fs-6"
+                [(ngModel)]="otpKod"
+                name="otpKod"
+                placeholder="Unesite šestocifreni kod"
+                autocomplete="one-time-code"
+                inputmode="numeric"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                required>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm"
+              [disabled]="ucitava">
+              {{ ucitava ? 'Proveravanje...' : 'Potvrdi prijavu' }}
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-link w-100 mt-3 text-decoration-none"
+              (click)="nazadNaPrijavu()">
+              Nazad na prijavu
+            </button>
+
+          </form>
+        }
+      </div>
+
+      <div class="col-lg-4 desni-panel text-white d-flex flex-column align-items-center justify-content-center p-4 text-center position-relative overflow-hidden">
+        <div class="dekorativni-krug krug-1"></div>
+        <div class="dekorativni-krug krug-2"></div>
+
+        <div class="position-relative z-1">
+          <h3 class="fw-bold mb-3">Novi ste ovde?</h3>
+          <p class="text-light small mb-4 opacity-75">
+            Napravite nalog i čuvajte svoje fajlove na jednom mestu.
+          </p>
+         
+<a
+  routerLink="/registracija"
+  class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold text-decoration-none">
+  Registrujte se
+</a>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
