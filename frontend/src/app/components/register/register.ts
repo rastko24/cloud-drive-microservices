@@ -18,7 +18,7 @@ export class RegisterComponent {
   lozinka: string = '';
   potvrdaLozinke: string = '';
 
-  private apiUrl = 'http://localhost:8081/api/users/register';
+  private apiUrl = 'http://localhost:8080/api/users/register';
   private http = inject(HttpClient);
 
   registrujSe() {

@@ -36,8 +36,8 @@ interface BreadcrumbItem {
 export class FoldersComponent implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
-  private apiFolderi = 'http://localhost:8082/api/folderi';
-  private apiFajlovi = 'http://localhost:8082/api/fajlovi';
+  private apiFolderi = 'http://localhost:8080/api/folderi';
+  private apiFajlovi = 'http://localhost:8080/api/fajlovi';
 
   ucitava = false;
   vlasnikId = '';
