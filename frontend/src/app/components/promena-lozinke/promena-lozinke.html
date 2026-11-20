@@ -1,0 +1,109 @@
+
+
+<div class="prijava-kontejner container-fluid min-vh-100 d-flex align-items-center justify-content-center p-4">
+  <div class="kartica-okvir rounded-4 overflow-hidden w-100" style="max-width: 1100px;">
+    <div class="row g-0">
+
+      <div class="col-lg-8 p-5 bg-white">
+        <h2 class="fw-bold text-dark mb-3">Promena lozinke</h2>
+        <p class="text-muted small mb-4">
+          Unesite trenutnu i novu lozinku.
+        </p>
+
+        @if (greska) {
+          <div class="alert alert-danger">{{ greska }}</div>
+        }
+
+        @if (poruka) {
+          <div class="alert alert-success">{{ poruka }}</div>
+        }
+
+        <form (ngSubmit)="promeniLozinku()">
+          <div class="mb-3">
+            <label for="email" class="form-label text-secondary small fw-semibold">
+              E-mail adresa
+            </label>
+            <input
+              id="email"
+              type="email"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="email"
+              name="email"
+              autocomplete="username"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="staraLozinka" class="form-label text-secondary small fw-semibold">
+              Trenutna lozinka
+            </label>
+            <input
+              id="staraLozinka"
+              type="password"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="staraLozinka"
+              name="staraLozinka"
+              autocomplete="current-password"
+              required>
+          </div>
+
+          <div class="mb-3">
+            <label for="novaLozinka" class="form-label text-secondary small fw-semibold">
+              Nova lozinka
+            </label>
+            <input
+              id="novaLozinka"
+              type="password"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="novaLozinka"
+              name="novaLozinka"
+              minlength="12"
+              autocomplete="new-password"
+              required>
+          </div>
+
+          <div class="mb-4">
+            <label for="potvrdaLozinke" class="form-label text-secondary small fw-semibold">
+              Potvrdite novu lozinku
+            </label>
+            <input
+              id="potvrdaLozinke"
+              type="password"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="potvrdaLozinke"
+              name="potvrdaLozinke"
+              minlength="12"
+              autocomplete="new-password"
+              required>
+          </div>
+
+          <button
+            type="submit"
+            class="btn btn-primary w-100 py-3 rounded-pill fw-semibold"
+            [disabled]="ucitava">
+            {{ ucitava ? 'Čuvanje...' : 'Promeni lozinku' }}
+          </button>
+        </form>
+
+        <div class="text-center mt-4">
+          <a routerLink="/folderi" class="povratak-link fw-semibold text-decoration-none">
+            Nazad na moje foldere
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 desni-panel text-white d-flex flex-column align-items-center justify-content-center p-4 text-center position-relative overflow-hidden">
+        <div class="dekorativni-krug krug-1"></div>
+        <div class="dekorativni-krug krug-2"></div>
+
+        <div class="position-relative z-1">
+          <h3 class="fw-bold mb-3">Zaštitite svoj nalog</h3>
+          <p class="text-light small opacity-75">
+            Redovno ažurirajte lozinku i zaštitite svoje podatke.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
