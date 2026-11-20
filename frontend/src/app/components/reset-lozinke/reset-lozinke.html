@@ -1,0 +1,91 @@
+
+<div class="prijava-kontejner container-fluid min-vh-100 d-flex align-items-center justify-content-center p-4">
+  <div class="kartica-okvir rounded-4 overflow-hidden w-100" style="max-width: 1100px;">
+    <div class="row g-0">
+
+      <div class="col-lg-8 p-5 bg-white">
+        <h2 class="fw-bold text-dark mb-3">Postavite novu lozinku</h2>
+        <p class="text-muted small mb-4">
+          Izaberite novu lozinku za svoj nalog.
+        </p>
+
+        @if (greska) {
+          <div class="alert alert-danger">{{ greska }}</div>
+        }
+
+        @if (uspesno) {
+          <div class="alert alert-success">
+            Lozinka je uspešno promenjena.
+          </div>
+
+          <a routerLink="/login"
+             class="btn btn-primary w-100 py-3 rounded-pill fw-semibold">
+            Prijavi se
+          </a>
+        } @else {
+          <form (ngSubmit)="resetujLozinku()">
+
+            <div class="mb-3">
+              <label for="novaLozinka" class="form-label text-secondary small fw-semibold">
+                Nova lozinka
+              </label>
+              <input
+                id="novaLozinka"
+                type="password"
+                class="form-control form-control-lg fs-6"
+                [(ngModel)]="novaLozinka"
+                name="novaLozinka"
+                autocomplete="new-password"
+                minlength="12"
+                placeholder="Unesite novu lozinku"
+                required>
+            </div>
+
+            <div class="mb-4">
+              <label for="potvrdaLozinke" class="form-label text-secondary small fw-semibold">
+                Potvrdite novu lozinku
+              </label>
+              <input
+                id="potvrdaLozinke"
+                type="password"
+                class="form-control form-control-lg fs-6"
+                [(ngModel)]="potvrdaLozinke"
+                name="potvrdaLozinke"
+                autocomplete="new-password"
+                minlength="12"
+                placeholder="Ponovite novu lozinku"
+                required>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary w-100 py-3 rounded-pill fw-semibold"
+              [disabled]="ucitava">
+              {{ ucitava ? 'Čuvanje...' : 'Sačuvaj novu lozinku' }}
+            </button>
+
+          </form>
+        }
+
+        <div class="text-center mt-4">
+          <a routerLink="/login" class="povratak-link fw-semibold text-decoration-none">
+            Nazad na prijavu
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 desni-panel text-white d-flex flex-column align-items-center justify-content-center p-4 text-center position-relative overflow-hidden">
+        <div class="dekorativni-krug krug-1"></div>
+        <div class="dekorativni-krug krug-2"></div>
+
+        <div class="position-relative z-1">
+          <h3 class="fw-bold mb-3">Bezbednost naloga</h3>
+          <p class="text-light small opacity-75">
+            Nova lozinka štiti pristup vašim fajlovima i podacima.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
