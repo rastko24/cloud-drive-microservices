@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Document(collection = "datoteke")
 public class Datoteka {
-
     @Id
     private String id;
     private String naziv;
@@ -14,6 +13,7 @@ public class Datoteka {
     private Long velicina;
     private String vlasnikId;
     private String folderId;
+    private String gridFsId;
     private LocalDateTime vremeIzmene;
 
     public Datoteka() {
@@ -34,6 +34,8 @@ public class Datoteka {
     public void setVlasnikId(String vlasnikId) { this.vlasnikId = vlasnikId; }
     public String getFolderId() { return folderId; }
     public void setFolderId(String folderId) { this.folderId = folderId; }
+    public String getGridFsId() { return gridFsId; }
+    public void setGridFsId(String gridFsId) { this.gridFsId = gridFsId; }
     public LocalDateTime getVremeIzmene() { return vremeIzmene; }
     public void setVremeIzmene(LocalDateTime vremeIzmene) { this.vremeIzmene = vremeIzmene; }
 }
