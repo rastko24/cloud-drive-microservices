@@ -1,19 +1,11 @@
-
 <div class="prijava-kontejner container-fluid min-vh-100 d-flex align-items-center justify-content-center p-4">
   <div class="kartica-okvir border-0 rounded-4 overflow-hidden shadow-lg w-100" style="max-width: 1100px;">
     <div class="row g-0">
 
       <div class="col-lg-8 p-5 bg-white">
         <div class="mb-4">
-          <h2 class="fw-bold text-dark">
-            {{ prikaziOtp ? 'Potvrdite prijavu' : 'Prijavite se' }}
-          </h2>
-
-          <p class="text-muted small">
-            {{ prikaziOtp
-              ? 'Unesite kod koji smo poslali na vašu e-mail adresu.'
-              : 'Unesite svoje podatke da pristupite nalogu.' }}
-          </p>
+          <h2 class="fw-bold text-dark">Prijavite se</h2>
+          <p class="text-muted small">Unesite svoje podatke da pristupite nalogu.</p>
         </div>
 
         @if (greska) {
@@ -21,103 +13,74 @@
             {{ greska }}
           </div>
         }
-
-        @if (poruka) {
-          <div class="alert alert-success" role="status">
-            {{ poruka }}
+        
+        @if (vecUlogovan) {
+          <div class="alert alert-info d-flex flex-wrap align-items-center justify-content-between gap-2" role="alert">
+            <span class="small">
+              Već ste prijavljeni{{ ulogovanKorisnik ? ' (' + ulogovanKorisnik + ')' : '' }}.
+            </span>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-sm btn-primary rounded-pill px-3" (click)="idiNaFoldere()">
+                Idi na foldere
+              </button>
+              <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill px-3" (click)="odjaviSe()">
+                Odjavi se
+              </button>
+            </div>
           </div>
         }
 
-        @if (!prikaziOtp) {
-          <form (ngSubmit)="prijaviSe()">
+        <form (ngSubmit)="prijaviSe()">
 
-            <div class="mb-3">
-              <label for="email" class="form-label text-secondary small fw-semibold">
-                E-mail adresa
-              </label>
+          <div class="mb-3">
+            <label for="email" class="form-label text-secondary small fw-semibold">
+              E-mail adresa
+            </label>
 
-              <input
-                id="email"
-                type="email"
-                class="form-control form-control-lg fs-6"
-                [(ngModel)]="email"
-                name="email"
-                placeholder="ime@example.com"
-                autocomplete="username"
-                required>
-            </div>
+            <input
+              id="email"
+              type="email"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="email"
+              name="email"
+              placeholder="ime@example.com"
+              autocomplete="username"
+              required>
+          </div>
 
-            <div class="mb-3">
-              <label for="lozinka" class="form-label text-secondary small fw-semibold">
-                Lozinka
-              </label>
+          <div class="mb-3">
+            <label for="lozinka" class="form-label text-secondary small fw-semibold">
+              Lozinka
+            </label>
 
-              <input
-                id="lozinka"
-                type="password"
-                class="form-control form-control-lg fs-6"
-                [(ngModel)]="lozinka"
-                name="lozinka"
-                placeholder="Unesite lozinku"
-                autocomplete="current-password"
-                required>
-            </div>
+            <input
+              id="lozinka"
+              type="password"
+              class="form-control form-control-lg fs-6"
+              [(ngModel)]="lozinka"
+              name="lozinka"
+              placeholder="Unesite lozinku"
+              autocomplete="current-password"
+              required>
+          </div>
 
-            <div class="text-end mb-4">
-              <a
-                routerLink="/zaboravljena-lozinka"
-                class="text-decoration-none fw-semibold"
-                style="color: #6b46c1;">
-                Zaboravljena lozinka?
-              </a>
-            </div>
+          <div class="text-end mb-4">
+            <a
+              routerLink="/zaboravljena-lozinka"
+              class="text-decoration-none fw-semibold"
+              style="color: #6b46c1;">
+              Zaboravljena lozinka?
+            </a>
+          </div>
 
-            <button
-              type="submit"
-              class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm"
-              [disabled]="ucitava">
-              {{ ucitava ? 'Prijavljivanje...' : 'Prijavi se' }}
-            </button>
+          <button
+            type="submit"
+            class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm"
+            [disabled]="ucitava">
+            {{ ucitava ? 'Prijavljivanje...' : 'Prijavi se' }}
+          </button>
 
-          </form>
-        } @else {
-          <form (ngSubmit)="proveriOtp()">
-
-            <div class="mb-3">
-              <label for="otpKod" class="form-label text-secondary small fw-semibold">
-                Kod za potvrdu
-              </label>
-
-              <input
-                id="otpKod"
-                type="text"
-                class="form-control form-control-lg fs-6"
-                [(ngModel)]="otpKod"
-                name="otpKod"
-                placeholder="Unesite šestocifreni kod"
-                autocomplete="one-time-code"
-                inputmode="numeric"
-                maxlength="6"
-                pattern="[0-9]{6}"
-                required>
-            </div>
-
-            <button
-              type="submit"
-              class="btn btn-primary w-100 py-3 rounded-pill fw-semibold shadow-sm"
-              [disabled]="ucitava">
-              {{ ucitava ? 'Proveravanje...' : 'Potvrdi prijavu' }}
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-link w-100 mt-3 text-decoration-none"
-              (click)="nazadNaPrijavu()">
-              Nazad na prijavu
-            </button>
-
-          </form>
-        }
+        </form>
       </div>
 
       <div class="col-lg-4 desni-panel text-white d-flex flex-column align-items-center justify-content-center p-4 text-center position-relative overflow-hidden">
@@ -143,4 +106,73 @@
 
     </div>
   </div>
+
+  <!-- Popup za OTP potvrdu prijave -->
+  @if (prikaziOtpPopup) {
+    <div class="otp-overlay d-flex align-items-center justify-content-center p-3">
+      <div class="otp-modal bg-white rounded-4 shadow-lg overflow-hidden w-100" style="max-width: 440px;">
+        <div class="desni-panel text-white p-4 text-center position-relative overflow-hidden">
+          <div class="dekorativni-krug krug-1"></div>
+          <div class="position-relative z-1">
+            <h4 class="fw-bold mb-1">Potvrdite prijavu</h4>
+            <p class="small mb-0 opacity-75">Unesite šestocifreni OTP kod sa e-maila</p>
+          </div>
+        </div>
+
+        <div class="p-4">
+          @if (poruka) {
+            <p class="text-muted small text-center mb-3">{{ poruka }}</p>
+          }
+
+          <div class="mb-3">
+            <label for="otpKod" class="form-label text-secondary small fw-semibold">
+              6-cifreni OTP kod
+            </label>
+            <input
+              id="otpKod"
+              type="text"
+              maxlength="6"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              class="form-control form-control-lg text-center fw-bold fs-4"
+              style="letter-spacing: 6px;"
+              [(ngModel)]="otpKod"
+              name="otpKod"
+              placeholder="000000"
+              required>
+          </div>
+
+          @if (otpGreska) {
+            <div class="alert alert-danger py-2 small text-center" role="alert">
+              {{ otpGreska }}
+            </div>
+          }
+
+          <button
+            type="button"
+            class="btn btn-primary w-100 py-2 rounded-pill fw-semibold shadow-sm mb-2"
+            [disabled]="ucitava"
+            (click)="proveriOtp()">
+            {{ ucitava ? 'Proveravanje...' : 'Potvrdi prijavu' }}
+          </button>
+
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <button
+              type="button"
+              class="btn btn-link btn-sm text-decoration-none p-0"
+              [disabled]="ucitava"
+              (click)="posaljiOtpPonovo()">
+              Pošalji kod ponovo
+            </button>
+            <button
+              type="button"
+              class="btn btn-link btn-sm text-muted text-decoration-none p-0"
+              (click)="zatvoriOtpPopup()">
+              Zatvori
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 </div>
