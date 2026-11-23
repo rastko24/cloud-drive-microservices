@@ -1,8 +1,8 @@
-
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 interface Folder {
   id: string;
@@ -29,7 +29,7 @@ interface BreadcrumbItem {
 @Component({
   selector: 'app-folders',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './folders.html',
   styleUrls: ['./folders.css']
 })
@@ -46,6 +46,35 @@ export class FoldersComponent implements OnInit {
   folderi: Folder[] = [];
   datoteke: Datoteka[] = [];
   noviNaziv = '';
+
+  private nedozvoljenNaziv(naziv: string): boolean {
+    return naziv.includes('/') || naziv.includes('\\') || naziv.includes('..');
+  }
+
+  /** null = OK, inače tekst greške za alert */
+  private validirajNaziv(naziv: string): string | null {
+    const n = naziv.trim();
+    if (!n) {
+      return 'Naziv ne sme biti prazan.';
+    }
+    if (this.nedozvoljenNaziv(n)) {
+      return 'Naziv ne sme sadržati /, \\ ili ..';
+    }
+    if (n.length > 255) {
+      return 'Naziv je predug (maksimalno 255 karaktera).';
+    }
+    return null;
+  }
+
+  private porukaSaServera(e: HttpErrorResponse, podrazumevano: string): string {
+    if (typeof e.error === 'string' && e.error.trim()) {
+      return e.error;
+    }
+    if (e.error && typeof e.error.message === 'string') {
+      return e.error.message;
+    }
+    return podrazumevano;
+  }
 
   ngOnInit() {
     this.vlasnikId = localStorage.getItem('userId') || '';
@@ -67,16 +96,19 @@ export class FoldersComponent implements OnInit {
         this.datoteke = [...(data.datoteke || [])];
         this.cdr.detectChanges();
       },
-      error: (e) => alert(typeof e.error === 'string' ? e.error : 'Greška pri učitavanju.')
+      error: (e) =>
+        alert(this.porukaSaServera(e as HttpErrorResponse, 'Greška pri učitavanju.'))
     });
   }
 
   kreirajFolder() {
-    const naziv = this.noviNaziv.trim();
-    if (!naziv) {
-      alert('Unesite naziv foldera.');
+    const greska = this.validirajNaziv(this.noviNaziv);
+    if (greska) {
+      alert(greska);
       return;
     }
+    const naziv = this.noviNaziv.trim();
+
     this.http.post<Folder>(this.apiFolderi, {
       naziv,
       vlasnikId: this.vlasnikId,
@@ -87,7 +119,8 @@ export class FoldersComponent implements OnInit {
         this.folderi = [...this.folderi, kreiran];
         this.ucitajSadrzaj();
       },
-      error: (e) => alert(typeof e.error === 'string' ? e.error : 'Greška pri kreiranju.')
+      error: (e) =>
+        alert(this.porukaSaServera(e as HttpErrorResponse, 'Greška pri kreiranju.'))
     });
   }
 
@@ -104,30 +137,46 @@ export class FoldersComponent implements OnInit {
   }
 
   preimenujFolder(folder: Folder) {
-    const novi = prompt('Novi naziv foldera:', folder.naziv);
-    if (!novi || !novi.trim()) {
+    const unos = prompt('Novi naziv foldera:', folder.naziv);
+    if (unos === null) {
       return;
     }
+    const greska = this.validirajNaziv(unos);
+    if (greska) {
+      alert(greska);
+      return;
+    }
+    const novi = unos.trim();
+
     this.http.put(`${this.apiFolderi}/${folder.id}/naziv`, {
-      naziv: novi.trim(),
+      naziv: novi,
       vlasnikId: this.vlasnikId
     }).subscribe({
       next: () => this.ucitajSadrzaj(),
-      error: (e) => alert(typeof e.error === 'string' ? e.error : 'Greška pri preimenovanju.')
+      error: (e) =>
+        alert(this.porukaSaServera(e as HttpErrorResponse, 'Greška pri preimenovanju.'))
     });
   }
 
   preimenujDatoteku(datoteka: Datoteka) {
-    const novi = prompt('Novi naziv datoteke:', datoteka.naziv);
-    if (!novi || !novi.trim()) {
+    const unos = prompt('Novi naziv datoteke:', datoteka.naziv);
+    if (unos === null) {
       return;
     }
+    const greska = this.validirajNaziv(unos);
+    if (greska) {
+      alert(greska);
+      return;
+    }
+    const novi = unos.trim();
+
     this.http.put(`${this.apiFajlovi}/${datoteka.id}/naziv`, {
-      naziv: novi.trim(),
+      naziv: novi,
       vlasnikId: this.vlasnikId
     }).subscribe({
       next: () => this.ucitajSadrzaj(),
-      error: (e) => alert(typeof e.error === 'string' ? e.error : 'Greška pri preimenovanju.')
+      error: (e) =>
+        alert(this.porukaSaServera(e as HttpErrorResponse, 'Greška pri preimenovanju.'))
     });
   }
 }

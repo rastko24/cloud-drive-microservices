@@ -93,5 +93,8 @@ public class FolderService {
         if (naziv.contains("/") || naziv.contains("\\") || naziv.contains("..")) {
             throw new RuntimeException("Naziv sadrži nedozvoljene karaktere!");
         }
+        if (naziv.length() > 255) {
+            throw new RuntimeException("Naziv je predug!");
+        }
     }
 }
