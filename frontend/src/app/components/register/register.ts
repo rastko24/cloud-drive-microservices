@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -27,6 +27,7 @@ export class RegisterComponent {
   private baseUrl = 'http://localhost:8081/api/users';
   private http = inject(HttpClient);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   registrujSe() {
     if (!this.ime.trim() || !this.prezime.trim() || !this.email.trim() || !this.lozinka.trim() || !this.potvrdaLozinke.trim()) {
@@ -69,9 +70,11 @@ export class RegisterComponent {
         this.greskaPotvrde = '';
         this.porukaPotvrde = `Poslali smo 6-cifreni kod na ${this.email}.`;
         this.prikaziPopupPotvrde = true;
+        this.cdr.detectChanges();
       },
       error: (greska) => {
         this.ucitavanje = false;
+        this.cdr.detectChanges();
         const poruka = typeof greska.error === 'string' ? greska.error : 'Došlo je do problema.';
         alert('Greška: ' + poruka);
       }
@@ -94,12 +97,14 @@ export class RegisterComponent {
       next: () => {
         this.ucitavanje = false;
         this.prikaziPopupPotvrde = false;
+        this.cdr.detectChanges();
         alert('Nalog je uspešno potvrđen! Sada se možete prijaviti.');
         this.router.navigate(['/login']);
       },
       error: (greska) => {
         this.ucitavanje = false;
         this.greskaPotvrde = typeof greska.error === 'string' ? greska.error : 'Pogrešan ili istekao kod.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -114,15 +119,18 @@ export class RegisterComponent {
       next: (odgovor) => {
         this.ucitavanje = false;
         this.porukaPotvrde = odgovor;
+        this.cdr.detectChanges();
       },
       error: (greska) => {
         this.ucitavanje = false;
         this.greskaPotvrde = typeof greska.error === 'string' ? greska.error : 'Greška pri ponovnom slanju koda.';
+        this.cdr.detectChanges();
       }
     });
   }
 
   zatvoriPopup() {
     this.prikaziPopupPotvrde = false;
+    this.cdr.detectChanges();
   }
 }

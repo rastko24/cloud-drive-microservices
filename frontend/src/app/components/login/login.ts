@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
 
   private http = inject(HttpClient);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef);
 
   private apiUrl = 'http://localhost:8081/api/users';
 
@@ -47,6 +48,7 @@ export class LoginComponent implements OnInit {
     localStorage.removeItem('userEmail');
     this.vecUlogovan = false;
     this.ulogovanKorisnik = '';
+    this.cdr.detectChanges();
   }
 
   prijaviSe() {
@@ -78,10 +80,12 @@ export class LoginComponent implements OnInit {
         this.otpGreska = '';
         this.poruka = `Kod za potvrdu poslat je na ${this.email.trim()}.`;
         this.prikaziOtpPopup = true;
+        this.cdr.detectChanges();
       },
       error: (odgovor: HttpErrorResponse) => {
         this.ucitava = false;
         this.greska = this.procitajGresku(odgovor);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -119,7 +123,13 @@ export class LoginComponent implements OnInit {
           }
         } catch {
         }
+        this.cdr.detectChanges();
         this.router.navigate(['/folderi']);
+      },
+      error: (odgovor: HttpErrorResponse) => {
+        this.ucitava = false;
+        this.otpGreska = this.procitajGresku(odgovor);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -136,10 +146,12 @@ export class LoginComponent implements OnInit {
       next: (odgovor) => {
         this.ucitava = false;
         this.poruka = odgovor || `Novi kod je poslat na ${this.email.trim()}.`;
+        this.cdr.detectChanges();
       },
       error: (odgovor: HttpErrorResponse) => {
         this.ucitava = false;
         this.otpGreska = this.procitajGresku(odgovor);
+        this.cdr.detectChanges();
       }
     });
   }
@@ -148,6 +160,7 @@ export class LoginComponent implements OnInit {
     this.prikaziOtpPopup = false;
     this.otpKod = '';
     this.otpGreska = '';
+    this.cdr.detectChanges();
   }
 
   private procitajGresku(odgovor: HttpErrorResponse): string {
