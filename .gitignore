@@ -1,2 +1,5 @@
 /.metadata/
 .metadata/
+.env
+.env.*
+!.env.example

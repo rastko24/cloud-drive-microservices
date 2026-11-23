@@ -1,3 +1,4 @@
+
 services:
   mailpit:
     image: axllent/mailpit
@@ -7,6 +8,7 @@ services:
       - "8025:8025"
     networks:
       - app-net
+
   mongo:
     image: mongo:9
     container_name: cloud-drive-mongo
@@ -35,6 +37,7 @@ services:
       SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD:-test}
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: ${SPRING_MAIL_AUTH:-false}
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: ${SPRING_MAIL_STARTTLS:-false}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN in .env}
     depends_on:
       - mongo
     networks:
@@ -49,7 +52,9 @@ services:
       - "8082:8082"
     environment:
       SPRING_MONGODB_URI: mongodb://mongo:27017/files_db
+      SERVER_PORT: 8082
       USERS_SERVICE_URL: http://users-service:8081
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN in .env}
     depends_on:
       - mongo
       - users-service
@@ -70,7 +75,7 @@ services:
       - users-service
       - files-service
     networks:
-      - app-net 
+      - app-net
 
   frontend:
     build:
