@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/fajlovi")
-@CrossOrigin(origins = "http://localhost:4200")
 public class DatotekaController {
 
     private final DatotekaService datotekaService;
