@@ -17,7 +17,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/users_db
+      SPRING_MONGODB_URI: mongodb://mongo:27017/users_db
       SERVER_PORT: 8081
       APP_RESET_URL: ${APP_RESET_URL:-http://localhost:4200/reset-password}
       APP_BLOKADA_MINUTA: ${APP_BLOKADA_MINUTA:-15}
@@ -40,7 +40,7 @@ services:
     ports:
       - "8082:8082"
     environment:
-      MONGODB_URI: mongodb://mongo:27017/files_db
+      SPRING_MONGODB_URI: mongodb://mongo:27017/files_db
       USERS_SERVICE_URL: http://users-service:8081
     depends_on:
       - mongo
