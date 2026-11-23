@@ -1,4 +1,12 @@
 services:
+  mailpit:
+    image: axllent/mailpit
+    container_name: cloud-drive-mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - app-net
   mongo:
     image: mongo:9
     container_name: cloud-drive-mongo
@@ -19,9 +27,9 @@ services:
     environment:
       SPRING_MONGODB_URI: mongodb://mongo:27017/users_db
       SERVER_PORT: 8081
-      APP_RESET_URL: ${APP_RESET_URL:-http://localhost:4200/reset-password}
+      APP_RESET_URL: ${APP_RESET_URL:-http://localhost:4200/reset-lozinke}
       APP_BLOKADA_MINUTA: ${APP_BLOKADA_MINUTA:-15}
-      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-localhost}
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-mailpit}
       SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-1025}
       SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME:-noreply@clouddrive.local}
       SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD:-test}

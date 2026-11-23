@@ -1,5 +1,4 @@
-
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -22,7 +21,8 @@ export class ResetLozinkeComponent {
 
   private http = inject(HttpClient);
   private ruta = inject(ActivatedRoute);
-  private apiUrl = 'http://localhost:8080/api/users/resetuj-lozinku';
+  private cdr = inject(ChangeDetectorRef);
+  private apiUrl = 'http://localhost:8081/api/users/resetuj-lozinku';
 
   constructor() {
     this.email = this.ruta.snapshot.queryParamMap.get('email') || '';
@@ -64,12 +64,14 @@ export class ResetLozinkeComponent {
         this.novaLozinka = '';
         this.potvrdaLozinke = '';
         this.token = '';
+        this.cdr.detectChanges();
       },
       error: (odgovor: HttpErrorResponse) => {
         this.ucitava = false;
         this.greska = typeof odgovor.error === 'string' && odgovor.error.trim()
           ? odgovor.error
           : 'Resetovanje nije uspelo. Link je možda istekao.';
+        this.cdr.detectChanges();
       }
     });
   }

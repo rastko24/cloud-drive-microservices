@@ -20,6 +20,11 @@ public class User {
     private Long kvotaSkladista;
     private Long zauzetoSkladiste;
 
+    private boolean verifikovan;
+    private String kodPotvrdeRegistracije;
+    private LocalDateTime kodPotvrdeIstice;
+    private int brojPokusajaPotvrde;
+    
     private String otpKod;
     private LocalDateTime otpIstice;
 
@@ -38,6 +43,7 @@ public class User {
         this.prezime = prezime;
         this.kvotaSkladista = kvotaSkladista;
         this.zauzetoSkladiste = 0L;
+        this.verifikovan = false;
     }
 
     public String getId() {
@@ -94,6 +100,38 @@ public class User {
 
     public void setZauzetoSkladiste(Long zauzetoSkladiste) {
         this.zauzetoSkladiste = zauzetoSkladiste;
+    }
+    
+    public boolean isVerifikovan() {
+        return verifikovan;
+    }
+
+    public void setVerifikovan(boolean verifikovan) {
+        this.verifikovan = verifikovan;
+    }
+
+    public String getKodPotvrdeRegistracije() {
+        return kodPotvrdeRegistracije;
+    }
+
+    public void setKodPotvrdeRegistracije(String kodPotvrdeRegistracije) {
+        this.kodPotvrdeRegistracije = kodPotvrdeRegistracije;
+    }
+
+    public LocalDateTime getKodPotvrdeIstice() {
+        return kodPotvrdeIstice;
+    }
+
+    public void setKodPotvrdeIstice(LocalDateTime kodPotvrdeIstice) {
+        this.kodPotvrdeIstice = kodPotvrdeIstice;
+    }
+
+    public int getBrojPokusajaPotvrde() {
+        return brojPokusajaPotvrde;
+    }
+
+    public void setBrojPokusajaPotvrde(int brojPokusajaPotvrde) {
+        this.brojPokusajaPotvrde = brojPokusajaPotvrde;
     }
 
     public String getOtpKod() {

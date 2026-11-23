@@ -1,5 +1,4 @@
-
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -18,7 +17,8 @@ export class ZaboravljenaLozinkaComponent {
   greska = '';
 
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/users/zatrazi-reset';
+  private cdr = inject(ChangeDetectorRef);
+  private apiUrl = 'http://localhost:8081/api/users/zatrazi-reset';
 
   posaljiZahtev() {
     this.greska = '';
@@ -41,10 +41,12 @@ export class ZaboravljenaLozinkaComponent {
       next: () => {
         this.ucitava = false;
         this.poruka = 'Ako nalog postoji, poslat je link za resetovanje lozinke.';
+        this.cdr.detectChanges();
       },
       error: () => {
         this.ucitava = false;
         this.greska = 'Zahtev nije uspeo. Proverite vezu sa serverom i pokušajte ponovo.';
+        this.cdr.detectChanges();
       }
     });
   }

@@ -1,25 +1,20 @@
-
 package com.cloud_drive.users_service.controller;
 
 import com.cloud_drive.users_service.dto.*;
 import com.cloud_drive.users_service.model.User;
 import com.cloud_drive.users_service.service.UserService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-
 import java.util.Collections;
 import java.util.Map;
 
@@ -50,6 +45,34 @@ public class UserController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
 
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @PostMapping("/potvrdi-registraciju")
+    public ResponseEntity<?> potvrdiRegistraciju(@RequestBody OtpDto podaci) {
+        if (podaci == null || podaci.getEmail() == null || podaci.getKod() == null) {
+            return ResponseEntity.badRequest().body("Unesite email i kod za potvrdu!");
+        }
+
+        try {
+            userService.potvrdiRegistraciju(podaci.getEmail(), podaci.getKod());
+            return ResponseEntity.ok("Registracija je uspesno potvrdjena!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/ponovo-posalji-kod")
+    public ResponseEntity<?> ponovoPosaljiKod(@RequestBody Map<String, String> podaci) {
+        if (podaci == null || podaci.get("email") == null || podaci.get("email").isBlank()) {
+            return ResponseEntity.badRequest().body("Unesite email adresu!");
+        }
+
+        try {
+            userService.ponovoPosaljiKodRegistracije(podaci.get("email"));
+            return ResponseEntity.ok("Novi kod za potvrdu je poslat na email!");
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

@@ -1,5 +1,4 @@
-
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
@@ -21,7 +20,8 @@ export class PromenaLozinkeComponent {
   greska = '';
 
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/users/promeni-lozinku';
+  private cdr = inject(ChangeDetectorRef);
+  private apiUrl = 'http://localhost:8081/api/users/promeni-lozinku';
 
   constructor() {
     this.email = localStorage.getItem('userEmail') || '';
@@ -72,12 +72,14 @@ export class PromenaLozinkeComponent {
         this.staraLozinka = '';
         this.novaLozinka = '';
         this.potvrdaLozinke = '';
+        this.cdr.detectChanges();
       },
       error: (odgovor: HttpErrorResponse) => {
         this.ucitava = false;
         this.greska = typeof odgovor.error === 'string' && odgovor.error.trim()
           ? odgovor.error
           : 'Promena lozinke nije uspela.';
+        this.cdr.detectChanges();
       }
     });
   }

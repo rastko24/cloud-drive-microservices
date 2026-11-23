@@ -80,10 +80,15 @@
           <p class="text-light small mb-4 opacity-75">
             Vaši fajlovi na jednom mestu — sigurno i organizovano.
           </p>
-          <a routerLink="/login" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold text-decoration-none d-block mb-2">
-            Prijava
-          </a>
-          <a routerLink="/promena-lozinke" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold text-decoration-none d-block opacity-75">
+          <button
+            type="button"
+            class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold d-block w-100 mb-2"
+            (click)="odjaviSe()">
+            Odjava
+          </button>
+          <a
+            routerLink="/promena-lozinke"
+            class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold text-decoration-none d-block opacity-75">
             Promena lozinke
           </a>
         </div>

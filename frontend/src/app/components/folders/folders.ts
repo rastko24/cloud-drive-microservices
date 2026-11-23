@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 interface Folder {
@@ -34,6 +34,7 @@ interface BreadcrumbItem {
   styleUrls: ['./folders.css']
 })
 export class FoldersComponent implements OnInit {
+  private router = inject(Router);
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
   private apiFolderi = 'http://localhost:8080/api/folderi';
@@ -51,7 +52,8 @@ export class FoldersComponent implements OnInit {
     return naziv.includes('/') || naziv.includes('\\') || naziv.includes('..');
   }
 
-  /** null = OK, inače tekst greške za alert */
+  
+
   private validirajNaziv(naziv: string): string | null {
     const n = naziv.trim();
     if (!n) {
@@ -76,10 +78,16 @@ export class FoldersComponent implements OnInit {
     return podrazumevano;
   }
 
+  odjaviSe() {
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    this.router.navigate(['/login']);
+  }
+
   ngOnInit() {
-    this.vlasnikId = localStorage.getItem('userId') || '';
+    this.vlasnikId = localStorage.getItem('userId') || localStorage.getItem('userEmail') || '';
     if (!this.vlasnikId) {
-      alert('Prvo se registrujte na /registracija.');
+      alert('Prvo se prijavite na /login.');
       return;
     }
     this.ucitajSadrzaj();
