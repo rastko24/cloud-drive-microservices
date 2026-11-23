@@ -25,7 +25,7 @@ export class LoginComponent {
   private http = inject(HttpClient);
   private router = inject(Router);
 
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = 'http://localhost:8081/api/users';
 
   prijaviSe() {
     this.greska = '';

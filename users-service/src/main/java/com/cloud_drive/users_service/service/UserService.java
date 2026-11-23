@@ -1,5 +1,4 @@
-
-package com.cloud_drive.users_service.service;
+	package com.cloud_drive.users_service.service;
 
 import com.cloud_drive.users_service.dto.UserRegistrationDto;
 import com.cloud_drive.users_service.model.User;
@@ -36,70 +35,161 @@ public class UserService {
 
     public User registerUser(UserRegistrationDto registrationDto) {
 
-        if (userRepository.findByEmail(registrationDto.getEmail()).isPresent()) {
+        if (registrationDto.getPonovljenaLozinka() == null ||
+            !registrationDto.getLozinka().equals(registrationDto.getPonovljenaLozinka())) {
+            throw new RuntimeException("Lozinke se ne poklapaju!");
+        }
+
+        String lozinka = registrationDto.getLozinka();
+        if (lozinka == null ||
+            lozinka.length() < 12 ||
+            !lozinka.matches(".*[A-Z].*") ||
+            !lozinka.matches(".*[a-z].*") ||
+            !lozinka.matches(".*[0-9].*") ||
+            !lozinka.matches(".*[^a-zA-Z0-9].*")) {
+            throw new RuntimeException("Lozinka mora imati najmanje 12 karaktera, veliko slovo, malo slovo, broj i specijalan znak!");
+        }
+
+        User postojeci = userRepository.findByEmail(registrationDto.getEmail()).orElse(null);
+
+        if (postojeci != null && postojeci.isVerifikovan()) {
             throw new RuntimeException("Korisnik sa ovim email-om vec postoji!");
         }
 
-        String hashedLozinka = passwordEncoder.encode(registrationDto.getLozinka());
+        String hashedLozinka = passwordEncoder.encode(lozinka);
         Long defaultKvota = 5L * 1024 * 1024 * 1024;
 
-        User newUser = new User(
-            registrationDto.getEmail(),
-            hashedLozinka,
-            registrationDto.getIme(),
-            registrationDto.getPrezime(),
-            defaultKvota
-        );
+        User korisnik = (postojeci != null) ? postojeci : new User();
+        korisnik.setEmail(registrationDto.getEmail());
+        korisnik.setLozinka(hashedLozinka);
+        korisnik.setIme(registrationDto.getIme());
+        korisnik.setPrezime(registrationDto.getPrezime());
+        korisnik.setKvotaSkladista(defaultKvota);
+        korisnik.setZauzetoSkladiste(0L);
+        korisnik.setDatumPromeneLozinke(LocalDateTime.now());
+        korisnik.setVerifikovan(false);
 
-        newUser.setDatumPromeneLozinke(LocalDateTime.now());
+        SecureRandom generator = new SecureRandom();
+        int broj = generator.nextInt(900000) + 100000;
+        String kod = String.valueOf(broj);
 
-        return userRepository.save(newUser);
+        korisnik.setKodPotvrdeRegistracije(passwordEncoder.encode(kod));
+        korisnik.setKodPotvrdeIstice(LocalDateTime.now().plusMinutes(15));
+        korisnik.setBrojPokusajaPotvrde(0);
+
+        User sacuvan = userRepository.save(korisnik);
+        emailService.posaljiKodZaPotvrduRegistracije(sacuvan.getEmail(), kod);
+
+        return sacuvan;
     }
 
-    
+    public void potvrdiRegistraciju(String email, String kod) {
+        User korisnik = userRepository.findByEmail(email).orElse(null);
 
-
-public boolean prijava(String email, String lozinka) {
-
-    User korisnik = userRepository.findByEmail(email).orElse(null);
-
-    if (korisnik == null || lozinka == null) {
-        return false;
-    }
-
-    if (!passwordEncoder.matches(lozinka, korisnik.getLozinka())) {
-        return false;
-    }
-
-    if (korisnik.getDatumPromeneLozinke() == null) {
-        return false;
-    }
-
-    LocalDateTime sada = LocalDateTime.now();
-
-  
-    if (korisnik.getBlokiranDo() != null &&
-        sada.isBefore(korisnik.getBlokiranDo())) {
-        return false;
-    }
-
-
-    if (!sada.isBefore(
-        korisnik.getDatumPromeneLozinke().plusDays(60))) {
-
-        if (korisnik.getBlokiranDo() == null) {
-            korisnik.setBlokiranDo(
-                sada.plusMinutes(trajanjeBlokade)
-            );
-
-            userRepository.save(korisnik);
+        if (korisnik == null || kod == null || kod.isBlank()) {
+            throw new RuntimeException("Neispravan email ili kod za potvrdu!");
         }
 
-        return false;
+        if (korisnik.isVerifikovan()) {
+            return;
+        }
+
+        if (korisnik.getKodPotvrdeRegistracije() == null ||
+            korisnik.getKodPotvrdeIstice() == null ||
+            !LocalDateTime.now().isBefore(korisnik.getKodPotvrdeIstice())) {
+            throw new RuntimeException("Kod za potvrdu je istekao! Zatrazite novi kod.");
+        }
+
+        if (korisnik.getBrojPokusajaPotvrde() >= 3) {
+            throw new RuntimeException("Previse neuspelih pokusaja! Zatrazite novi kod.");
+        }
+
+        if (!passwordEncoder.matches(kod.trim(), korisnik.getKodPotvrdeRegistracije())) {
+            int pokusaji = korisnik.getBrojPokusajaPotvrde() + 1;
+            korisnik.setBrojPokusajaPotvrde(pokusaji);
+            if (pokusaji >= 3) {
+                korisnik.setKodPotvrdeRegistracije(null);
+                korisnik.setKodPotvrdeIstice(null);
+            }
+            userRepository.save(korisnik);
+            throw new RuntimeException("Pogresan kod za potvrdu!");
+        }
+
+        korisnik.setVerifikovan(true);
+        korisnik.setKodPotvrdeRegistracije(null);
+        korisnik.setKodPotvrdeIstice(null);
+        korisnik.setBrojPokusajaPotvrde(0);
+        userRepository.save(korisnik);
     }
 
-    return true;
-}
+    public void ponovoPosaljiKodRegistracije(String email) {
+        User korisnik = userRepository.findByEmail(email).orElse(null);
+
+        if (korisnik == null) {
+            throw new RuntimeException("Korisnik sa ovim email-om ne postoji!");
+        }
+
+        if (korisnik.isVerifikovan()) {
+            throw new RuntimeException("Nalog je vec potvrdjen!");
+        }
+
+        SecureRandom generator = new SecureRandom();
+        int broj = generator.nextInt(900000) + 100000;
+        String kod = String.valueOf(broj);
+
+        korisnik.setKodPotvrdeRegistracije(passwordEncoder.encode(kod));
+        korisnik.setKodPotvrdeIstice(LocalDateTime.now().plusMinutes(15));
+        korisnik.setBrojPokusajaPotvrde(0);
+        userRepository.save(korisnik);
+
+        emailService.posaljiKodZaPotvrduRegistracije(email, kod);
+    }
+
+	public boolean prijava(String email, String lozinka) {
+	
+	    User korisnik = userRepository.findByEmail(email).orElse(null);
+	
+	    if (korisnik == null || lozinka == null) {
+	        return false;
+	    }
+	
+	    if (!passwordEncoder.matches(lozinka, korisnik.getLozinka())) {
+	        return false;
+	    }
+	    
+	    if (!korisnik.isVerifikovan()) {
+	        return false;
+	    }
+	
+	    if (korisnik.getDatumPromeneLozinke() == null) {
+	        return false;
+	    }
+	
+	    LocalDateTime sada = LocalDateTime.now();
+	
+	  
+	    if (korisnik.getBlokiranDo() != null &&
+	        sada.isBefore(korisnik.getBlokiranDo())) {
+	        return false;
+	    }
+	
+	
+	    if (!sada.isBefore(
+	        korisnik.getDatumPromeneLozinke().plusDays(60))) {
+	
+	        if (korisnik.getBlokiranDo() == null) {
+	            korisnik.setBlokiranDo(
+	                sada.plusMinutes(trajanjeBlokade)
+	            );
+	
+	            userRepository.save(korisnik);
+	        }
+	
+	        return false;
+	    }
+	
+	    return true;
+	}
 
 
 
@@ -215,7 +305,6 @@ public boolean prijava(String email, String lozinka) {
         userRepository.save(korisnik);
     }
 
-    // ZAHTEV ZA RESET LOZINKE
     public void zatraziResetLozinke(String email) {
 
         User korisnik = userRepository.findByEmail(email).orElse(null);
@@ -245,59 +334,59 @@ public boolean prijava(String email, String lozinka) {
         emailService.posaljiLinkZaReset(email, link);
     }
 
-public void resetujLozinku(String email, String token, String novaLozinka) {
-
-    if (email == null || token == null || novaLozinka == null) {
-        throw new RuntimeException("Nedostaju podaci!");
-    }
-
-    User korisnik = userRepository.findByEmail(email).orElse(null);
-
-    if (korisnik == null) {
-        throw new RuntimeException("Link nije ispravan ili je istekao!");
-    }
-
-    if (korisnik.getTokenResetLozinke() == null ||
-        korisnik.getTokenResetIstice() == null) {
-        throw new RuntimeException("Link nije ispravan ili je istekao!");
-    }
-
-    if (!LocalDateTime.now().isBefore(korisnik.getTokenResetIstice())) {
-        throw new RuntimeException("Link nije ispravan ili je istekao!");
-    }
-
-    if (!passwordEncoder.matches(token, korisnik.getTokenResetLozinke())) {
-        throw new RuntimeException("Link nije ispravan ili je istekao!");
-    }
-
-    if (novaLozinka.length() < 12 ||
-        !novaLozinka.matches(".*[A-Z].*") ||
-        !novaLozinka.matches(".*[a-z].*") ||
-        !novaLozinka.matches(".*[0-9].*") ||
-        !novaLozinka.matches(".*[^a-zA-Z0-9].*")) {
-        throw new RuntimeException("Nova lozinka nije dovoljno jaka!");
-    }
-
-    if (passwordEncoder.matches(novaLozinka, korisnik.getLozinka())) {
-        throw new RuntimeException("Nova lozinka mora biti drugacija od stare!");
-    }
-
-    korisnik.setLozinka(passwordEncoder.encode(novaLozinka));
-    korisnik.setDatumPromeneLozinke(LocalDateTime.now());
-
-    korisnik.setTokenResetLozinke(null);
-    korisnik.setTokenResetIstice(null);
-
-
-korisnik.setOtpKod(null);
-korisnik.setOtpIstice(null);
-korisnik.setBrojOtpPokusaja(0);
-
-
-korisnik.setBlokiranDo(null);
-
-userRepository.save(korisnik);
-
-}
+	public void resetujLozinku(String email, String token, String novaLozinka) {
+	
+	    if (email == null || token == null || novaLozinka == null) {
+	        throw new RuntimeException("Nedostaju podaci!");
+	    }
+	
+	    User korisnik = userRepository.findByEmail(email).orElse(null);
+	
+	    if (korisnik == null) {
+	        throw new RuntimeException("Link nije ispravan ili je istekao!");
+	    }
+	
+	    if (korisnik.getTokenResetLozinke() == null ||
+	        korisnik.getTokenResetIstice() == null) {
+	        throw new RuntimeException("Link nije ispravan ili je istekao!");
+	    }
+	
+	    if (!LocalDateTime.now().isBefore(korisnik.getTokenResetIstice())) {
+	        throw new RuntimeException("Link nije ispravan ili je istekao!");
+	    }
+	
+	    if (!passwordEncoder.matches(token, korisnik.getTokenResetLozinke())) {
+	        throw new RuntimeException("Link nije ispravan ili je istekao!");
+	    }
+	
+	    if (novaLozinka.length() < 12 ||
+	        !novaLozinka.matches(".*[A-Z].*") ||
+	        !novaLozinka.matches(".*[a-z].*") ||
+	        !novaLozinka.matches(".*[0-9].*") ||
+	        !novaLozinka.matches(".*[^a-zA-Z0-9].*")) {
+	        throw new RuntimeException("Nova lozinka nije dovoljno jaka!");
+	    }
+	
+	    if (passwordEncoder.matches(novaLozinka, korisnik.getLozinka())) {
+	        throw new RuntimeException("Nova lozinka mora biti drugacija od stare!");
+	    }
+	
+	    korisnik.setLozinka(passwordEncoder.encode(novaLozinka));
+	    korisnik.setDatumPromeneLozinke(LocalDateTime.now());
+	
+	    korisnik.setTokenResetLozinke(null);
+	    korisnik.setTokenResetIstice(null);
+	
+	
+		korisnik.setOtpKod(null);
+		korisnik.setOtpIstice(null);
+		korisnik.setBrojOtpPokusaja(0);
+		
+		
+		korisnik.setBlokiranDo(null);
+		
+		userRepository.save(korisnik);
+	
+	}
 
 }

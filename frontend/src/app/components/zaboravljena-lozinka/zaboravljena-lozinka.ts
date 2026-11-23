@@ -18,7 +18,7 @@ export class ZaboravljenaLozinkaComponent {
   greska = '';
 
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/users/zatrazi-reset';
+  private apiUrl = 'http://localhost:8081/api/users/zatrazi-reset';
 
   posaljiZahtev() {
     this.greska = '';

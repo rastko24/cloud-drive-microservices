@@ -22,7 +22,7 @@ export class ResetLozinkeComponent {
 
   private http = inject(HttpClient);
   private ruta = inject(ActivatedRoute);
-  private apiUrl = 'http://localhost:8080/api/users/resetuj-lozinku';
+  private apiUrl = 'http://localhost:8081/api/users/resetuj-lozinku';
 
   constructor() {
     this.email = this.ruta.snapshot.queryParamMap.get('email') || '';

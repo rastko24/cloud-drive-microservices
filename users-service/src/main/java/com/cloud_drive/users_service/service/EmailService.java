@@ -13,6 +13,18 @@ public class EmailService {
     public EmailService(JavaMailSender posiljalac) {
         this.posiljalac = posiljalac;
     }
+    
+    public void posaljiKodZaPotvrduRegistracije(String email, String kod) {
+        SimpleMailMessage poruka = new SimpleMailMessage();
+        poruka.setTo(email);
+        poruka.setSubject("Potvrda registracije - Cloud Drive");
+        poruka.setText(
+            "Dobrodosli na Cloud Drive!\n\n"
+            + "Vas 6-cifreni kod za potvrdu registracije je: " + kod + "\n"
+            + "Kod vazi 15 minuta."
+        );
+        posiljalac.send(poruka);
+    }
 
     public void posaljiKod(String email, String kod) {
 
@@ -26,22 +38,22 @@ public class EmailService {
         posiljalac.send(poruka);
     }
 
-public void posaljiLinkZaReset(String email, String link) {
-
-    SimpleMailMessage poruka = new SimpleMailMessage();
-
-    poruka.setTo(email);
-    poruka.setSubject("Resetovanje lozinke");
-
-    poruka.setText(
-        "Zatrazili ste resetovanje lozinke.\n\n"
-        + "Kliknite na sledeci link:\n"
-        + link
-        + "\n\nLink vazi 15 minuta."
-        + "\nAko niste zatrazili resetovanje, ignorisite poruku."
-    );
-
-    posiljalac.send(poruka);
-}
+	public void posaljiLinkZaReset(String email, String link) {
+	
+	    SimpleMailMessage poruka = new SimpleMailMessage();
+	
+	    poruka.setTo(email);
+	    poruka.setSubject("Resetovanje lozinke");
+	
+	    poruka.setText(
+	        "Zatrazili ste resetovanje lozinke.\n\n"
+	        + "Kliknite na sledeci link:\n"
+	        + link
+	        + "\n\nLink vazi 15 minuta."
+	        + "\nAko niste zatrazili resetovanje, ignorisite poruku."
+	    );
+	
+	    posiljalac.send(poruka);
+	}
 
 }

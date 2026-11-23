@@ -19,6 +19,17 @@ public class UserRegistrationDto {
     
     @NotBlank(message = "Prezime je obavezno!")
     private String prezime;
+    
+    @NotBlank(message = "Ponovljena lozinka je obavezna!")
+    private String ponovljenaLozinka;
+
+    public String getPonovljenaLozinka() {
+        return ponovljenaLozinka;
+    }
+
+    public void setPonovljenaLozinka(String ponovljenaLozinka) {
+        this.ponovljenaLozinka = ponovljenaLozinka;
+    }
 
     public String getEmail() {
         return email;

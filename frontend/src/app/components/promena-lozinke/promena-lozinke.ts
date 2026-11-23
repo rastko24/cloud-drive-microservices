@@ -21,7 +21,7 @@ export class PromenaLozinkeComponent {
   greska = '';
 
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/users/promeni-lozinku';
+  private apiUrl = 'http://localhost:8081/api/users/promeni-lozinku';
 
   constructor() {
     this.email = localStorage.getItem('userEmail') || '';
