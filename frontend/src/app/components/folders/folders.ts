@@ -366,6 +366,19 @@ export class FoldersComponent implements OnInit {
   }
 
   odjaviSe() {
+    const apiUrl = 'http://localhost:8080/api/users';
+
+    this.http.post(
+      apiUrl + '/logout',
+      {},
+      { withCredentials: true, responseType: 'text' }
+    ).subscribe({
+      next: () => this.zavrsiLokalnuOdjava(),
+      error: () => this.zavrsiLokalnuOdjava()
+    });
+  }
+
+  private zavrsiLokalnuOdjava() {
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     this.router.navigate(['/login']);

@@ -19,6 +19,7 @@ public class User {
     private String prezime;
     private Long kvotaSkladista;
     private Long zauzetoSkladiste;
+    private boolean admin;
 
     private boolean verifikovan;
     private String kodPotvrdeRegistracije;
@@ -43,6 +44,7 @@ public class User {
         this.prezime = prezime;
         this.kvotaSkladista = kvotaSkladista;
         this.zauzetoSkladiste = 0L;
+        this.admin = false;
         this.verifikovan = false;
     }
 
@@ -188,5 +190,13 @@ public class User {
 	public void setBlokiranDo(LocalDateTime blokiranDo) {
 	    this.blokiranDo = blokiranDo;
 	}
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
 	
 	}
