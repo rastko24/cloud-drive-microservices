@@ -23,6 +23,9 @@ spring:
                 allowedHeaders: "*"
                 allowCredentials: true
 
+          default-filters:
+            - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+
           routes:
             - id: users-servis
               uri: ${USERS_SERVICE_URL:http://localhost:8081}
