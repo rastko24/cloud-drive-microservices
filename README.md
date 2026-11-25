@@ -17,8 +17,6 @@ Svi REST pozivi sa fronta idu na **API Gateway** (`http://localhost:8080`); on p
 
 ## Arhitektura
 
-![Arhitektura](./arhitektura-sistema.png)
-
 ```mermaid
 flowchart TB
   angular[Angular :4200]
@@ -41,7 +39,7 @@ flowchart TB
   files -.->|REST interni API kvote| users
 ```
 
-Prošireni dijagram i rezime modela: [`docs/DIJAGRAM-2.1.md`](./docs/DIJAGRAM-2.1.md).
+Dijagram komponenti (portovi, baze, komunikacija): [`docs/DIJAGRAM-2.1.md`](./docs/DIJAGRAM-2.1.md).
 
 ---
 
@@ -204,6 +202,5 @@ cloud-drive-microservices/
 ├── .env.example
 ├── seed-notifikacije.js
 ├── docs/
-├── arhitektura-sistema.png
 └── README.md
 ```
