@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PromenaLozinke } from './promena-lozinke';
+import { provideRouter } from '@angular/router';
+import { PromenaLozinkeComponent } from './promena-lozinke';
 
 describe('PromenaLozinke', () => {
-  let component: PromenaLozinke;
-  let fixture: ComponentFixture<PromenaLozinke>;
+  let component: PromenaLozinkeComponent;
+  let fixture: ComponentFixture<PromenaLozinkeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PromenaLozinke],
+      imports: [PromenaLozinkeComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PromenaLozinke);
+    fixture = TestBed.createComponent(PromenaLozinkeComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
