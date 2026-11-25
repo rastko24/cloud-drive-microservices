@@ -1,7 +1,5 @@
 # Dijagram arhitekture — zahtev 2.1 (US-2.1.1)
 
-Kopiraj Mermaid u [https://mermaid.live](https://mermaid.live) i exportuj PNG ako želiš da zameniš `arhitektura-sistema.png`.
-
 ## Arhitektura komponenti
 
 ```mermaid
@@ -30,7 +28,7 @@ flowchart LR
   FS -.->|Feign GET/PATCH kvota| US
 ```
 
-## Lista portova (za odbranu)
+## Lista portova
 
 | Port | Servis |
 |------|--------|

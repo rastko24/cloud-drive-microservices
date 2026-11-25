@@ -1,31 +1,31 @@
-# Cloud Drive — dizajn sistema
- 
-Tim: Rastko, Nataša, Filip  
-Tehnologije: Angular, Spring Boot, MongoDB, Docker Compose
+# Cloud Drive — mikroservisna platforma za skladištenje fajlova
 
-Dokument je za zahtev 2.1 (dizajn). Opisuje kako planiramo da složimo sistem pre nego što sve bude implementirano.
+**Tim:** Rastko, Nataša, Filip  
+**Tehnologije:** Angular, Spring Boot, Spring Cloud Gateway, MongoDB, Docker Compose
 
----
-
-## 1. Šta pravimo
-
-Web aplikacija za čuvanje fajlova (slično Drive-u). Korisnik se registruje, ima kvotu, pravi foldere, uploaduje fajlove. Frontend je Angular. Posao je podeljen na mikroservise; klijent ne zove svaki servis posebno nego ide kroz API Gateway.
+Mikroservisni sistem sličan Google Drive-u: registracija, prijava, folderi, otpremanje datoteka, notifikacije i sinhrona provera kvote. 
 
 ---
 
-## 2. Dijagram
+## 1. Pregled
+
+Korisnik se registruje i potvrdi nalog putem koda sa emaila, prijavljuje se lozinkom i OTP kodom, zatim pravi foldere, otprema datoteke i vidi notifikacije. **Klijentska aplikacija (Angular)** ne zove mikroservise direktno nego isključivo **API Gateway** na portu **8080**
+
+---
+
+## 2. Arhitektura
 
 ![Arhitektura](./arhitektura-sistema.png)
 
 ```mermaid
 flowchart TB
-  angular[Angular]
-  gateway[API Gateway]
-  users[Users servis]
-  files[Files servis]
-  notif[Notifications servis]
-  mongo[(MongoDB)]
-  disk[Disk za sadržaj fajlova]
+  angular[Angular :4200]
+  gateway[API Gateway :8080]
+  users[Users :8081]
+  files[Files :8082]
+  notif[Notifications :8083]
+  mailpit[Mailpit :8025]
+  mongo[(MongoDB :27017)]
 
   angular --> gateway
   gateway --> users
@@ -34,93 +34,118 @@ flowchart TB
   users --> mongo
   files --> mongo
   notif --> mongo
-  files --> disk
-  files --> users
+  files --> gridfs[GridFS u Mongo]
+  users --> mailpit
+  files -.->|sinhron REST + interni token| users
 ```
 
-Napomena: linija files → users je sinhroni poziv (provera kvote pre uploada).
+**Sinhrona komunikacija (2.5):** pre snimanja datoteke **Files** poziva **Users** (interni API za kvotu) da proveri i ažurira zauzeće skladišta.
+
+Detaljniji dijagram: [`docs/DIJAGRAM-2.1.md`](./docs/DIJAGRAM-2.1.md).
 
 ---
 
 ## 3. Servisi i portovi
 
-Angular — 4200  
-API Gateway — 8080  
-Users — 8081  
-Files — 8082  
-Notifications — 8083  
-MongoDB — 27017  
+| Port | Komponenta |
+|------|------------|
+| 4200 | Angular (u Dockeru: nginx) |
+| 8080 | API Gateway |
+| 8081 | Users servis |
+| 8082 | Files servis |
+| 8083 | Notifications servis |
+| 27017 | MongoDB |
+| 8025 | Mailpit (web UI — pregled OTP / kodova) |
+| 1025 | Mailpit (SMTP) |
 
-Users: registracija, prijava, OTP, lozinke, kvota, admin deo oko kvote.  
-Files: folderi, upload, verzije, preimenovanje, metapodaci u bazi a bajti na disku.  
-Notifications: lista obaveštenja za korisnika (za ocenu 6 može ručno u bazi).  
-Gateway: rutiranje i kasnije JWT (informaciona bezbednost).
+| Servis            | Odgovornost                                                                                                            |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| **Users**         | Registracija, potvrda registracije, prijava, OTP, odjava, promena/reset lozinke, kvota korisnika, interni API za Files |
+| **Files**         | Folderi (hijerarhija), metapodaci datoteka, upload i nove verzije, sadržaj u GridFS                                    |
+| **Notifications** | Čitanje liste notifikacija                                                                                             |
+| **Gateway**       | Jedinstven ulaz, REST rute, CORS ka `http://localhost:4200`                                                            |
 
-Foldere i fajlove drži samo Files servis.
-
----
-
-## 4. MongoDB — šta čuvamo
-
-Users baza, kolekcija korisnika: email, hash lozinke, ime, prezime, kvota i zauzeće, polja za OTP i reset lozinke, datum promene lozinke.
-
-Files baza:  
-- folderi — naziv, vlasnikId, roditeljId (null je koren), datum  
-- datoteke — naziv, tip, veličina, vlasnikId, folderId, putanja na disku, verzija  
-
-Notifications baza: notifikacije — korisnikId, poruka, procitano, datum.
+Servisi **Sharing**, **Analytics**, message broker i ostali iz pune specifikacije **nisu deo opsega ocene 6** u ovom projektu.
 
 ---
 
-## 5. Komunikacija
+## 4. API Gateway — rute (2.2)
 
-Klijent i gateway: REST, JSON.  
-Gateway prosleđuje na odgovarajući servis.  
-Files i Users: REST između servisa (npr. da li ima mesta na disku pre snimanja fajla). Za ocenu 6 ne planiramo message broker.
+Konfiguracija: `gateway-service/src/main/resources/application.yml`
 
----
+| Prefix | Servis |
+|--------|--------|
+| `/api/users/**` | Users |
+| `/api/folderi/**` | Files |
+| `/api/fajlovi/**` | Files |
+| `/api/notifikacije/**` | Notifications |
 
-## 6. API — grubo
-
-Korisnici (Users): registracija, potvrda mailom, prijava, OTP, odjava, promena i reset lozinke, magični link, zahtev za kvotu, admin odobravanje.
-
-Folderi i fajlovi (Files): kreiranje foldera, pregled sadržaja foldera, preimenovanje, upload, nova verzija fajla.
-
-Notifikacije: GET lista za ulogovanog korisnika.
-
-Tačne putanje držimo u kodu kad krenemo implementaciju; u specifikaciji su povezane sa tačkama 1.1–1.8 i 1.4–1.7.
+Adrese backend servisa (`USERS_SERVICE_URL`, `FILES_SERVICE_URL`, …) dolaze iz **environment promenljivih** u Docker Compose, ne iz zakucanih vrednosti u kodu.
 
 ---
 
-## 7. Gateway — rute (ideja)
+## 5. MongoDB — baze i kolekcije (NoSQL)
 
-/api/korisnici/** → Users  
-/api/folderi/** i /api/fajlovi/** → Files  
-/api/notifikacije/** → Notifications  
+Jedan MongoDB kontejner, **više baza**:
 
-Konfiguracija preko application.yml i env promenljivih (2.4), ne fiksno u kodu.
+### `users_db`
 
----
+- Kolekcija `users`: email, heširana lozinka (BCrypt), ime, prezime, `kvotaSkladista`, `zauzetoSkladiste`, polja za potvrdu registracije, OTP, reset lozinke, `datumPromeneLozinke`, `verifikovan`, itd.
+- Kolekcija `zahtevi_kvota`: zahtevi za povećanje kvote
 
-## 8. Docker
+### `files_db`
 
-Jedan docker-compose: Mongo i svi servisi kada budu gotovi. Metapodaci u Mongo, fajlovi u volume/folderu na Files servisu.
+- `folderi`: `naziv`, `vlasnikId`, `roditeljId` (`null` = korenski folder), vremenske oznake.
+- `datoteke`: `naziv`, tip, veličina, `vlasnikId`, `folderId`, referenca na GridFS, verzija / datum izmene.
+- **GridFS**: binarni sadržaj datoteka (object storage unutar MongoDB).
 
----
+### `notifikacije_db`
 
-## 9. Povezivanje sa specifikacijom (ocena 6)
-
-2.1 — ovaj dokument i dijagram  
-2.2 — API Gateway  
-2.3 — Docker Compose  
-2.4 — spoljašnja konfiguracija  
-2.5 — sinhroni poziv Files → Users (kvota)  
-1.1–1.3, 1.8 — Users i Angular  
-1.4–1.6, 1.5 — Files i Angular  
-1.7 — Notifications  
-
-Informaciona bezbednost (JWT, validacija, BCrypt) — Users, gateway i deo na klijentu.
+- `notifikacije`: `email` korisnika, `poruka`, `vremeKreiranja` (i opciona polja).
 
 ---
 
-Kraj dokumenta — verzija za predaju dizajna.
+## 6. Komunikacija
+
+| Od → ka | Način | Primer |
+|---------|--------|--------|
+| Angular → Gateway | REST, JSON | `http://localhost:8080/api/...` |
+| Gateway → Users / Files / Notifications | REST (prosleđivanje) | po rutama iz tabele |
+| Files → Users | **Sinhron REST** | interni kvota API + zaglavlje `X-Internal-Token` |
+
+---
+
+## 7. Pokretanje
+
+### Docker Compose
+
+```bash
+docker compose up -d --build
+```
+
+Servisi u `docker-compose.yml`: **mongo**, **users-service**, **files-service**, **notifications-service**, **gateway-service**, **frontend**, **mailpit**.
+
+### Aplikacija
+
+- Frontend: **http://localhost:4200**
+- Mailpit (OTP / kodovi): **http://localhost:8025**
+
+---
+
+## 8. Repozitorijum — struktura
+
+```
+cloud-drive-microservices/
+├── frontend/              # Angular klijent
+├── gateway-service/       # API Gateway
+├── users-service/         # Korisnici, autentifikacija, kvota
+├── files-service/         # Folderi, datoteke, GridFS
+├── notifications-service/ # Lista notifikacija
+├── docker-compose.yml
+├── .env.example
+├── docs/
+├── arhitektura-sistema.png
+└── README.md
+```
+
+---
