@@ -267,13 +267,11 @@ export class FoldersComponent implements OnInit {
     });
   }
 
-  // 1.5 - Biranje fajla
   izaberiFajl(event: Event) {
     const input = event.target as HTMLInputElement;
     this.izabraniFajl = input.files?.[0] || null;
   }
 
-  // 1.5 - Otpremanje novog fajla
   otpremiFajl() {
     if (this.otpremanje) return;
 
@@ -323,7 +321,6 @@ export class FoldersComponent implements OnInit {
     });
   }
 
-  // 1.5 - Nova verzija postojece datoteke
   otpremiNovuVerziju(
     event: Event,
     datoteka: Datoteka
@@ -382,5 +379,9 @@ export class FoldersComponent implements OnInit {
     localStorage.removeItem('userId');
     localStorage.removeItem('userEmail');
     this.router.navigate(['/login']);
+  }
+
+  idiNaNotifikacije(): void {
+  this.router.navigate(['/notifikacije']);
   }
 }

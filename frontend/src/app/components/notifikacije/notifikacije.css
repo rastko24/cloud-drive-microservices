@@ -1,0 +1,41 @@
+.notifikacije-wrapper {
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stavka {
+  padding: 12px 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.poruka {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.vreme {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.greska {
+  color: #c62828;
+}

@@ -1,16 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ResetLozinke } from './reset-lozinke';
+import { provideRouter } from '@angular/router';
+import { ResetLozinkeComponent } from './reset-lozinke';
 
 describe('ResetLozinke', () => {
-  let component: ResetLozinke;
-  let fixture: ComponentFixture<ResetLozinke>;
+  let component: ResetLozinkeComponent;
+  let fixture: ComponentFixture<ResetLozinkeComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ResetLozinke],
+      imports: [ResetLozinkeComponent],
+      providers: [provideRouter([])]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ResetLozinke);
+    fixture = TestBed.createComponent(ResetLozinkeComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

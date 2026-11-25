@@ -1,0 +1,21 @@
+<div class="notifikacije-wrapper">
+  <div class="header">
+    <h2>Notifikacije</h2>
+    <button type="button" (click)="nazadNaFoldere()">Nazad na foldere</button>
+  </div>
+
+  <p *ngIf="ucitavanje">Učitavanje notifikacija...</p>
+
+  <p *ngIf="!ucitavanje && greska" class="greska">{{ greska }}</p>
+
+  <p *ngIf="!ucitavanje && !greska && notifikacije.length === 0">
+    Nema notifikacija za prikaz.
+  </p>
+
+  <ul *ngIf="!ucitavanje && !greska && notifikacije.length > 0" class="lista">
+    <li *ngFor="let n of notifikacije" class="stavka">
+      <div class="poruka">{{ n.poruka }}</div>
+      <div class="vreme">{{ n.vremeKreiranja | date:'dd.MM.yyyy. HH:mm' }}</div>
+    </li>
+  </ul>
+</div>

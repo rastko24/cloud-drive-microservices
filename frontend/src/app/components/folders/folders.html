@@ -106,7 +106,6 @@
 
         </div>
 
-        <!-- LISTA FOLDERA -->
         <h6 class="text-secondary small fw-semibold text-uppercase mb-3">
           Folderi
         </h6>
@@ -148,7 +147,6 @@
 
         </ul>
 
-        <!-- LISTA DATOTEKA -->
         <h6 class="text-secondary small fw-semibold text-uppercase mb-3">
           Datoteke
         </h6>
@@ -179,7 +177,6 @@
                   Preimenuj
                 </button>
 
-                <!-- NOVA VERZIJA DATOTEKE -->
                 <label
                   class="btn btn-sm btn-outline-primary rounded-pill mb-0"
                   [class.disabled]="otpremanje">
@@ -209,7 +206,6 @@
 
       </div>
 
-      <!-- DESNI PANEL -->
       <div class="col-lg-4 desni-panel text-white d-flex flex-column align-items-center justify-content-center p-4 text-center position-relative overflow-hidden">
 
         <div class="dekorativni-krug krug-1"></div>
@@ -225,11 +221,11 @@
             Vaši fajlovi na jednom mestu — sigurno i organizovano.
           </p>
 
-          <button
-            type="button"
+          <button 
+            type="button" 
             class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold d-block w-100 mb-2"
-            (click)="odjaviSe()">
-            Odjava
+            (click)="idiNaNotifikacije()">
+            Notifikacije
           </button>
 
           <a
@@ -244,6 +240,12 @@
             Promena lozinke
           </a>
 
+          <button
+            type="button"
+            class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold d-block w-100 mb-2"
+            (click)="odjaviSe()">
+            Odjava
+          </button>
         </div>
 
       </div>
