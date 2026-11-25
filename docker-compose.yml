@@ -1,4 +1,3 @@
-
 services:
   mailpit:
     image: axllent/mailpit
@@ -8,6 +7,26 @@ services:
       - "8025:8025"
     networks:
       - app-net
+
+  notifications-service:
+    build:
+      context: ./notifications-service
+      dockerfile: Dockerfile
+    container_name: notifications-service
+    ports:
+      - "8083:8083"
+    environment:
+      SERVER_PORT: ${NOTIFICATIONS_SERVER_PORT:-8083}
+      SPRING_MONGODB_URI: ${NOTIFICATIONS_MONGODB_URI:-mongodb://mongo:27017/notifikacije_db}
+      SPRING_DATA_MONGODB_URI: ${NOTIFICATIONS_MONGODB_URI:-mongodb://mongo:27017/notifikacije_db}
+      APP_MONGODB_DATABASE: ${APP_MONGODB_DATABASE:-notifikacije_db}
+      APP_MONGODB_COLLECTION: ${APP_MONGODB_COLLECTION:-notifikacije}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost:4200}
+    depends_on:
+      - mongo
+    networks:
+      - app-net
+    restart: unless-stopped
 
   mongo:
     image: mongo:9
@@ -27,10 +46,12 @@ services:
     ports:
       - "8081:8081"
     environment:
-      SPRING_MONGODB_URI: mongodb://mongo:27017/users_db
-      SERVER_PORT: 8081
+      SPRING_MONGODB_URI: ${USERS_MONGODB_URI:-mongodb://mongo:27017/users_db}
+      SERVER_PORT: ${USERS_SERVER_PORT:-8081}
       APP_RESET_URL: ${APP_RESET_URL:-http://localhost:4200/reset-lozinke}
       APP_BLOKADA_MINUTA: ${APP_BLOKADA_MINUTA:-15}
+      APP_LOZINKA_MAKS_DANA: ${APP_LOZINKA_MAKS_DANA:-60}
+      APP_LOZINKA_MIN_DANA: ${APP_LOZINKA_MIN_DANA:-1}
       SPRING_MAIL_HOST: ${SPRING_MAIL_HOST:-mailpit}
       SPRING_MAIL_PORT: ${SPRING_MAIL_PORT:-1025}
       SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME:-noreply@clouddrive.local}
@@ -51,10 +72,12 @@ services:
     ports:
       - "8082:8082"
     environment:
-      SPRING_MONGODB_URI: mongodb://mongo:27017/files_db
-      SERVER_PORT: 8082
-      USERS_SERVICE_URL: http://users-service:8081
+      SPRING_MONGODB_URI: ${FILES_MONGODB_URI:-mongodb://mongo:27017/files_db}
+      SERVER_PORT: ${FILES_SERVER_PORT:-8082}
+      USERS_SERVICE_URL: ${USERS_SERVICE_URL:-http://users-service:8081}
       INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:?Set INTERNAL_SERVICE_TOKEN in .env}
+      SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE: ${SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE:-50MB}
+      SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE: ${SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE:-52MB}
     depends_on:
       - mongo
       - users-service
@@ -69,11 +92,15 @@ services:
     ports:
       - "8080:8080"
     environment:
-      USERS_SERVICE_URL: http://users-service:8081
-      FILES_SERVICE_URL: http://files-service:8082
+      GATEWAY_SERVER_PORT: ${GATEWAY_SERVER_PORT:-8080}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost:4200}
+      USERS_SERVICE_URL: ${USERS_SERVICE_URL:-http://users-service:8081}
+      FILES_SERVICE_URL: ${FILES_SERVICE_URL:-http://files-service:8082}
+      NOTIFICATIONS_SERVICE_URL: ${NOTIFICATIONS_SERVICE_URL:-http://notifications-service:8083}
     depends_on:
       - users-service
       - files-service
+      - notifications-service
     networks:
       - app-net
 

@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 @Component({
   selector: 'app-zaboravljena-lozinka',
@@ -18,7 +19,7 @@ export class ZaboravljenaLozinkaComponent {
 
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
-  private apiUrl = 'http://localhost:8081/api/users/zatrazi-reset';
+  private apiUrl = `${APP_CONFIG.usersApiUrl}/api/users/zatrazi-reset`;
 
   posaljiZahtev() {
     this.greska = '';

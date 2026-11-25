@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 @Component({
   selector: 'app-promena-lozinke',
@@ -21,7 +22,7 @@ export class PromenaLozinkeComponent {
 
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
-  private apiUrl = 'http://localhost:8081/api/users/promeni-lozinku';
+  private apiUrl = `${APP_CONFIG.usersApiUrl}/api/users/promeni-lozinku`;
 
   constructor() {
     this.email = localStorage.getItem('userEmail') || '';

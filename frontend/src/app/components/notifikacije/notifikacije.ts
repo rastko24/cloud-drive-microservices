@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 export interface Notifikacija {
   id?: string;
@@ -22,7 +23,7 @@ export class Notifikacije implements OnInit {
   greska = '';
   email = '';
 
-  private readonly apiUrl = 'http://localhost:8083/api/notifikacije';
+  private readonly apiUrl = APP_CONFIG.notificationsApiUrl;
 
   constructor(
     private http: HttpClient,

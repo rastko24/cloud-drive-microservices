@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { APP_CONFIG } from '../../app.config';
 
 interface Folder {
   id: string;
@@ -46,8 +47,8 @@ export class FoldersComponent implements OnInit {
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef);
 
-  private apiFolderi = 'http://localhost:8080/api/folderi';
-  private apiFajlovi = 'http://localhost:8080/api/fajlovi';
+private apiFolderi = `${APP_CONFIG.gatewayApiUrl}/api/folderi`;
+private apiFajlovi = `${APP_CONFIG.gatewayApiUrl}/api/fajlovi`;
 
   ucitava = false;
   vlasnikId = '';

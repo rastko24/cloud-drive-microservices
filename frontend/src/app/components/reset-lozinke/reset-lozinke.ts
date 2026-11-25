@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 @Component({
   selector: 'app-reset-lozinke',
@@ -22,7 +23,7 @@ export class ResetLozinkeComponent {
   private http = inject(HttpClient);
   private ruta = inject(ActivatedRoute);
   private cdr = inject(ChangeDetectorRef);
-  private apiUrl = 'http://localhost:8081/api/users/resetuj-lozinku';
+  private apiUrl = `${APP_CONFIG.usersApiUrl}/api/users/resetuj-lozinku`;
 
   constructor() {
     this.email = this.ruta.snapshot.queryParamMap.get('email') || '';
