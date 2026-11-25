@@ -37,7 +37,7 @@ describe('Notifikacije', () => {
     fixture.detectChanges();
     const req = httpMock.expectOne(
       (r) =>
-        r.url === 'http://localhost:8083/api/notifikacije' &&
+        r.url === 'http://localhost:8080/api/notifikacije' &&
         r.params.get('email') === 'petrovicfilip112@gmail.com'
     );
     const mockData: Notifikacija[] = [

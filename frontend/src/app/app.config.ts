@@ -12,9 +12,9 @@ export interface AppConfig {
 
 export const APP_CONFIG: AppConfig = {
   gatewayApiUrl: 'http://localhost:8080',
-  usersApiUrl: 'http://localhost:8081',
-  filesApiUrl: 'http://localhost:8082',
-  notificationsApiUrl: 'http://localhost:8083/api/notifikacije',
+  usersApiUrl: 'http://localhost:8080',
+  filesApiUrl: 'http://localhost:8080',
+  notificationsApiUrl: 'http://localhost:8080/api/notifikacije',
 };
 
 export const appConfig: ApplicationConfig = {
