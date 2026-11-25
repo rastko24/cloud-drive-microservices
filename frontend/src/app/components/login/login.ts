@@ -13,6 +13,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 interface PrijavljeniKorisnik {
   id: string;
@@ -50,7 +51,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
-  private apiUrl = 'http://localhost:8080/api/users';
+  private apiUrl = `${APP_CONFIG.gatewayApiUrl}/api/users`;
 
   ngOnInit() {
     this.http.get<PrijavljeniKorisnik>(

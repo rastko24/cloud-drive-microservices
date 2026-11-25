@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 interface KvotaPregled {
   kvotaSkladista: number;
@@ -43,8 +44,8 @@ export class KvotaComponent implements OnInit {
   private http = inject(HttpClient);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
-  private apiUrl = 'http://localhost:8080/api/users';
-
+  private apiUrl = `${APP_CONFIG.gatewayApiUrl}/api/users`;
+  
   ngOnInit() {
     const ulogovan =
       localStorage.getItem('userId') ||

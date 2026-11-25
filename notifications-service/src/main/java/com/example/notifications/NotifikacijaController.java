@@ -1,7 +1,7 @@
 package com.example.notifications;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoDatabase;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
@@ -17,21 +17,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifikacije")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "${app.cors.allowed-origins:http://localhost:4200}")
 public class NotifikacijaController {
 
     private final MongoTemplate notifikacijeTemplate;
+    private final String collectionName;
 
-    public NotifikacijaController(MongoClient mongoClient) {
+    public NotifikacijaController(
+            MongoClient mongoClient,
+            @Value("${app.mongodb.database:notifikacije_db}") String databaseName,
+            @Value("${app.mongodb.collection:notifikacije}") String collectionName
+    ) {
         this.notifikacijeTemplate = new MongoTemplate(
-                new SimpleMongoClientDatabaseFactory(mongoClient, "notifikacije_db")
+                new SimpleMongoClientDatabaseFactory(mongoClient, databaseName)
         );
+        this.collectionName = collectionName;
     }
 
     @GetMapping
     public List<Notifikacija> dobaviNotifikacije(@RequestParam String email) {
         Query query = new Query(Criteria.where("email").is(email.trim()))
                 .with(Sort.by(Sort.Direction.DESC, "vremeKreiranja"));
-        return notifikacijeTemplate.find(query, Notifikacija.class, "notifikacije");
+        return notifikacijeTemplate.find(query, Notifikacija.class, collectionName);
     }
 }

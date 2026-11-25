@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router, RouterLink } from '@angular/router';
+import { APP_CONFIG } from '../../app.config';
 
 @Component({
   selector: 'app-register',
@@ -24,7 +25,7 @@ export class RegisterComponent {
   greskaPotvrde: string = '';
   ucitavanje: boolean = false;
 
-  private baseUrl = 'http://localhost:8081/api/users';
+  private baseUrl = `${APP_CONFIG.usersApiUrl}/api/users`;
   private http = inject(HttpClient);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
