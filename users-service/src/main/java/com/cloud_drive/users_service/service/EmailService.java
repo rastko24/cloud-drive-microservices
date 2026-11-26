@@ -56,4 +56,12 @@ public class EmailService {
 	    posiljalac.send(poruka);
 	}
 
+    public void posaljiMagicLink(String email, String link) {
+        SimpleMailMessage poruka = new SimpleMailMessage();
+        poruka.setTo(email);
+        poruka.setSubject("Prijava na Cloud Drive");
+        poruka.setText("Kliknite na link za prijavu (vazi 15 minuta):\n" + link
+                + "\nAko niste zatrazili prijavu, ignorisite poruku.");
+        posiljalac.send(poruka);
+    }
 }

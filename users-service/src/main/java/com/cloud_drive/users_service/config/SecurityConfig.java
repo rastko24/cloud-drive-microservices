@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/users/register",
                     "/api/users/login",
+                    "/api/users/zatrazi-magic-link",
+                    "/api/users/magic-login",
                     "/api/users/potvrdi-registraciju",
                     "/api/users/ponovo-posalji-kod",
                     "/api/users/proveri-otp",
