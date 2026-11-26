@@ -1,10 +1,14 @@
 package com.clouddrive.filesservice.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public class FolderCreateDto {
 
     @NotBlank(message = "Naziv foldera je obavezan!")
+    @Size(max = 255, message = "Naziv je predug")
+    @Pattern(regexp = "^(?!.*\\.\\.)(?!.*[/\\\\]).*$", message = "Nedozvoljeni karakteri u nazivu")
     private String naziv;
 
     @NotBlank(message = "ID vlasnika je obavezan!")

@@ -1,3 +1,4 @@
+
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -39,7 +40,7 @@ export class MagicLoginComponent implements OnInit {
       next: () => {
         this.ucitava = false;
         this.cdr.detectChanges();
-        this.router.navigate(['/login']);
+        this.router.navigate(['/folderi']);
       },
       error: (err) => {
         this.ucitava = false;

@@ -14,6 +14,7 @@ public class Datoteka {
     private String vlasnikId;
     private String folderId;
     private String gridFsId;
+    private String sha256;
     private LocalDateTime vremeIzmene;
 
     public Datoteka() {
@@ -34,6 +35,8 @@ public class Datoteka {
     public void setVlasnikId(String vlasnikId) { this.vlasnikId = vlasnikId; }
     public String getFolderId() { return folderId; }
     public void setFolderId(String folderId) { this.folderId = folderId; }
+    public String getSha256() { return sha256; }
+    public void setSha256(String sha256) { this.sha256 = sha256; }
     public String getGridFsId() { return gridFsId; }
     public void setGridFsId(String gridFsId) { this.gridFsId = gridFsId; }
     public LocalDateTime getVremeIzmene() { return vremeIzmene; }
