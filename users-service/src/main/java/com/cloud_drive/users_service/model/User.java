@@ -1,4 +1,3 @@
-
 package com.cloud_drive.users_service.model;
 
 import java.time.LocalDateTime;
@@ -199,4 +198,4 @@ public class User {
         this.admin = admin;
     }
 	
-	}
+}

@@ -1,6 +1,6 @@
 # Cloud Drive
 
-**Tim:** Rastko, Nataša, Filip  
+**Tim:** Rastko SR 38/2024, Nataša SR 40/2024, Filip SR 47/2024
 **Tehnologije:** Angular, Spring Boot, Spring Cloud Gateway, MongoDB, Docker Compose
 
 Web aplikacija za skladištenje fajlova u duhu Google Drive-a: registracija i prijava sa kodom na mailu, folderi, upload i verzije fajlova, pregled kvote i lista notifikacija. Backend je podeljen na nekoliko mikroservisa; podaci su u MongoDB-u.

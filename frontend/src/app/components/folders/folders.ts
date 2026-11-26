@@ -364,7 +364,7 @@ private apiFajlovi = `${APP_CONFIG.gatewayApiUrl}/api/fajlovi`;
   }
 
   odjaviSe() {
-    const apiUrl = 'http://localhost:8080/api/users';
+    const apiUrl = `${APP_CONFIG.usersApiUrl}/api/users`;
 
     this.http.post(
       apiUrl + '/logout',

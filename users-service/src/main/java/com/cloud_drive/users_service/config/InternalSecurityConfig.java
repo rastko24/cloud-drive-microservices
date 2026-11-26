@@ -1,4 +1,3 @@
-
 package com.cloud_drive.users_service.config;
 
 import org.springframework.context.annotation.Bean;

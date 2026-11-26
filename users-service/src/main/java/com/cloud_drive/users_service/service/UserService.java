@@ -1,4 +1,4 @@
-	package com.cloud_drive.users_service.service;
+package com.cloud_drive.users_service.service;
 
 import com.cloud_drive.users_service.dto.UserRegistrationDto;
 import com.cloud_drive.users_service.model.User;
