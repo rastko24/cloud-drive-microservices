@@ -3,8 +3,14 @@
 import com.cloud_drive.users_service.dto.UserRegistrationDto;
 import com.cloud_drive.users_service.model.User;
 import com.cloud_drive.users_service.repository.UserRepository;
+import com.cloud_drive.users_service.model.MagicLoginToken;
+import com.cloud_drive.users_service.repository.MagicLoginTokenRepository;
 
 import java.security.SecureRandom;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.util.HexFormat;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.net.URLEncoder;
@@ -20,15 +26,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final MagicLoginTokenRepository magicTokenRepository;
+
+    @Value("${app.magic-login-url:http://localhost:4200/magic-login}")
+    private String magicLoginUrl;
     @Value("${app.blokada-minuta:15}")
     private int trajanjeBlokade;
 
     @Value("${app.reset-url}")
     private String adresaZaReset;
 
-    public UserService(UserRepository userRepository, EmailService emailService) {
+    public UserService(UserRepository userRepository, EmailService emailService, MagicLoginTokenRepository magicTokenRepository) {
         this.userRepository = userRepository;
         this.emailService = emailService;
+        this.magicTokenRepository = magicTokenRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
@@ -388,5 +399,53 @@ public class UserService {
 		userRepository.save(korisnik);
 	
 	}
+
+    public void zatraziMagicLink(String email) {
+        if (email == null || email.isBlank()) return;
+        String normalizovan = email.trim().toLowerCase(java.util.Locale.ROOT);
+        User korisnik = userRepository.findByEmail(normalizovan).orElse(null);
+        if (korisnik == null || !korisnik.isVerifikovan()) return;
+
+        byte[] nasumicni = new byte[32];
+        new SecureRandom().nextBytes(nasumicni);
+        String token = Base64.getUrlEncoder().withoutPadding().encodeToString(nasumicni);
+        magicTokenRepository.save(new MagicLoginToken(otisakTokena(token), normalizovan,
+                Instant.now().plusSeconds(15 * 60), false));
+
+        String link = magicLoginUrl + "?email=" + URLEncoder.encode(normalizovan, StandardCharsets.UTF_8)
+                + "&token=" + URLEncoder.encode(token, StandardCharsets.UTF_8);
+        emailService.posaljiMagicLink(normalizovan, link);
+    }
+
+    public User prijaviMagicLinkom(String email, String token) {
+        if (email == null || email.isBlank() || token == null || token.isBlank()) {
+            throw new RuntimeException("Link nije ispravan ili je istekao.");
+        }
+        String normalizovan = email.trim().toLowerCase(java.util.Locale.ROOT);
+        MagicLoginToken zapis = magicTokenRepository
+                .findByTokenAndEmailAndUsedFalse(otisakTokena(token), normalizovan)
+                .orElseThrow(() -> new RuntimeException("Link nije ispravan ili je istekao."));
+        if (zapis.getExpiresAt() == null || !Instant.now().isBefore(zapis.getExpiresAt())) {
+            throw new RuntimeException("Link nije ispravan ili je istekao.");
+        }
+        User korisnik = userRepository.findByEmail(normalizovan)
+                .orElseThrow(() -> new RuntimeException("Link nije ispravan ili je istekao."));
+        if (!korisnik.isVerifikovan()) {
+            throw new RuntimeException("Nalog nije potvrdjen.");
+        }
+        zapis.setUsed(true);
+        magicTokenRepository.save(zapis);
+        return korisnik;
+    }
+
+    private String otisakTokena(String token) {
+        try {
+            byte[] hash = MessageDigest.getInstance("SHA-256")
+                    .digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 nije dostupan", e);
+        }
+    }
 
 }
